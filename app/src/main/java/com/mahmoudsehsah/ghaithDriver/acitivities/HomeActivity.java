@@ -56,6 +56,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResult;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -70,13 +71,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mahmoudsehsah.ghaithDriver.R;
+import com.mahmoudsehsah.ghaithDriver.Server.ApiClient;
+import com.mahmoudsehsah.ghaithDriver.adapter.APIRequests;
 import com.mahmoudsehsah.ghaithDriver.custom.CustomTypefaceSpan;
 import com.mahmoudsehsah.ghaithDriver.custom.GPSTracker;
+import com.mahmoudsehsah.ghaithDriver.models.updateLocation;
 import com.mahmoudsehsah.ghaithDriver.session.SessionManager;
 
 import java.util.HashMap;
 
 import me.anwarshahriar.calligrapher.Calligrapher;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,LocationListener, NavigationView.OnNavigationItemSelectedListener {
@@ -98,12 +104,15 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
     static double latitude ,longitude,workLatitude, workLongitude;
     Button btnFindMe;
     Marker mcurrent;
+    private LocationManager locationManager;
 
     private String customerId = "", destination;
     private LatLng destinationLatLng, pickupLatLng;
     private float rideDistance;
     Button goOffilne , goOnline;
     boolean doubleBackToExitPressedOnce = false;
+    boolean isFirstTime = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,28 +132,61 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView icon_money = findViewById( R.id.icon_money );
         icon_money.setTypeface(font);
 
-        gps = new GPSTracker(HomeActivity.this);
-        if (gps.canGetLocation()) {
-            if (ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
-                    == PackageManager.PERMISSION_GRANTED) {
-                latitude = gps.getLatitude();
-                longitude = gps.getLongitude();
-                Log.d("origin", String.valueOf(new LatLng(latitude,longitude)));
-            }
-        }
+//        gps = new GPSTracker(HomeActivity.this);
+//        if (gps.canGetLocation()) {
+//            if (ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+//                    == PackageManager.PERMISSION_GRANTED) {
+//                latitude = gps.getLatitude();
+//                longitude = gps.getLongitude();
+//                Log.d("origin", String.valueOf(new LatLng(latitude,longitude)));
+//            }
+//        }
         Log.d("origin", String.valueOf(new LatLng(latitude,longitude)));
 
-        final Handler myHandler = new Handler();
-        Runnable myRunnable = new Runnable() {
-            @Override
-            public void run() {
+        final Handler handler = new Handler();
+        final int delay = 10000; //milliseconds
 
-                //Do Something
-                //run method that check the status
-                Log.d("test", "tototo");
-                myHandler.postDelayed(this, 2000);
+        handler.postDelayed(new Runnable(){
+            public void run(){
+
+                gps = new GPSTracker(HomeActivity.this);
+                if (gps.canGetLocation()) {
+                    if (ContextCompat.checkSelfPermission(HomeActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        latitude = gps.getLatitude();
+                        longitude = gps.getLongitude();
+                        Log.d("origin", String.valueOf(new LatLng(latitude,longitude)));
+                    }
+                }
+                LatLng latLng = new LatLng(latitude, longitude);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+                mMap.animateCamera(cameraUpdate);
+
+                SessionManager sessionManager = new SessionManager(HomeActivity.this);
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String id_user = user.get(SessionManager.USER_ID);
+                APIRequests APIRequests = ApiClient.getClient().create(APIRequests.class);
+                Call<updateLocation> call = APIRequests.updateLocation(id_user,latitude,longitude);
+                call.enqueue(new Callback<updateLocation>() {
+                    @Override
+                    public void onResponse(Call<updateLocation> call, retrofit2.Response<updateLocation> response) {
+                        Log.d("suceess", "suceess");
+                    }
+
+                    @Override
+                    public void onFailure(Call<updateLocation> call, Throwable t) {
+                        Log.d("Error", t.getMessage());
+                        Log.d("Error", "Error");
+                    }
+
+                });
+
+                handler.postDelayed(this, delay);
             }
-        };
+        }, delay);
+
+
+
 
         Toolbar mTopToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mTopToolbar);
@@ -338,9 +380,8 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
             mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             // 4
             if (mLastLocation != null) {
-                LatLng currentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation
-                        .getLongitude());
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
+               // LatLng currentLocation = new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude());
+               // mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
             }
         }
     }

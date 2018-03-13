@@ -12,8 +12,6 @@ import okhttp3.RequestBody;
 public class UpdateUnformation {
 
 
-
-
     @SerializedName("customers_username")
     @Expose
     private String customers_username;

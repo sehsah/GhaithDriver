@@ -289,10 +289,10 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         builder.include(me);
         builder.include(market);
-        builder.include(client);
+        //builder.include(client);
         LatLngBounds bounds = builder.build();
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 50);
-       // mMap.animateCamera(cu);
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
+        mMap.animateCamera(cu);
     }
 
 

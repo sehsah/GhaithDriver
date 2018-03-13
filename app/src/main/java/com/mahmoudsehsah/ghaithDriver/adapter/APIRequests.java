@@ -4,6 +4,7 @@ import com.mahmoudsehsah.ghaithDriver.models.AddNewOffer;
 import com.mahmoudsehsah.ghaithDriver.models.Login;
 import com.mahmoudsehsah.ghaithDriver.models.Register;
 import com.mahmoudsehsah.ghaithDriver.models.UpdateUnformation;
+import com.mahmoudsehsah.ghaithDriver.models.updateLocation;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -44,6 +45,12 @@ public interface APIRequests {
             @Part("driver_id") int driver_id,
             @Part MultipartBody.Part customers_photo);
 
+    @FormUrlEncoded
+    @POST("android/ghaith/update_locationDriver")
+    Call<updateLocation> updateLocation(
+            @Field("driver_id") String driver_id,
+            @Field("lat") double lat,
+            @Field("lng") double lng);
 
     ////////////////////////////////// Trips   //////////////////////////////////
     @GET("android/ghaith/getNewTrip")
