@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/linear_pickup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layoutDirection="rtl"
+                android:padding="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="18dp"
+                    android:gravity="right"
+                    android:id="@+id/icon_location1"
+                    android:text="@string/icon_location"/>
+                <TextView
+                    android:id="@+id/pickup_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginStart="15dp"
+                    android:background="@drawable/bottom_border"
+                    android:text="موقعك الحالي"
+                    android:inputType="text"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:padding="5dp"
+                    android:textColor="#000"
+                    android:textSize="16dp"
+                    android:textColorHint="#b7b7b7"
+                    android:autoText="true"
+                    tools:ignore="RelativeOverlap,RtlHardcoded" />
+
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#f4f4f4" />
+
+            <LinearLayout
+                android:id="@+id/relative_drop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layoutDirection="rtl"
+                android:layout_weight="3"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/icon_locationn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="right"
+                    android:text="@string/icon_location"
+                    android:textSize="18dp" />
+
+                <TextView
+                    android:id="@+id/drop_location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="25dp"
+                    android:layout_marginStart="15dp"
+                    android:background="@drawable/bottom_border"
+                    android:text="تجربه تبسيب بسصبس بسصبصثب "
+                    android:inputType="text"
+                    android:focusable="false"
+                    android:focusableInTouchMode="true"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:padding="5dp"
+                    android:textColor="#000"
+                    android:textSize="16dp"
+                    android:textColorHint="#b7b7b7"
+                    android:autoText="true"
+                    tools:ignore="RelativeOverlap,RtlHardcoded" />
+
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#f4f4f4" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:layoutDirection="rtl"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:gravity="right"
+                    android:layout_marginLeft="10dp"
+                    android:id="@+id/time"
+                    android:textColor="@color/main"
+                    android:text="@string/icon_money"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:text="الوقت المقدر للوصول"
+                    android:layout_weight="1"
+                    android:textSize="16dp"
+                    android:textAlignment="gravity" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:gravity="left"
+                    android:text="9 دقايق "
+                    android:layout_weight="1"
+                    android:id="@+id/time_arrival"
+                    android:textAlignment="gravity" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#f4f4f4" />
+            <LinearLayout
+                android:id="@+id/price_box"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_weight="2"
+                android:orientation="horizontal"
+                android:layoutDirection="rtl"
+                android:padding="15dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:gravity="right"
+                    android:layout_marginLeft="10dp"
+                    android:textColor="@color/main"
+                    android:id="@+id/icon_money"
+                    android:text="@string/icon_money"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="right"
+                    android:text="طريقة الدفع"
+                    android:layout_weight="1"
+                    android:textSize="16dp"
+                    android:textAlignment="gravity" />
+
+                <TextView
+                    android:id="@+id/priceText"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:gravity="left"
+                    android:text="كاش "
+                    android:layout_weight="1"
+                    android:textAlignment="gravity" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/linear_request"
+                android:layout_width="match_parent"
+                android:layout_weight="2"
+                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                 <RelativeLayout
+                     android:layout_width="wrap_content"
+                     android:layout_marginLeft="20dp"
+                     android:layout_marginRight="20dp"                     android:layout_gravity="center_vertical"
+                     android:layout_weight="1"
+                     android:layout_height="wrap_content">
+                     <Button
+                         android:id="@+id/accepted_requests"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+                         android:background="@drawable/btn_accepted"
+                         android:padding="10dp"
+                         android:layout_centerHorizontal="true"
+                         android:text="قبول"
+                         android:textColor="@color/white"
+                         android:textStyle="bold" />
+                 </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_height="wrap_content">
+                    <Button
+                        android:id="@+id/cacceled_requests"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_cancel"
+                        android:paddingRight="25dp"
+                        android:paddingLeft="25dp"
+                        android:text="رفض"
+                        android:layout_centerHorizontal="true"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+
+
+</RelativeLayout>
