@@ -3,8 +3,10 @@ package com.mahmoudsehsah.ghaithDriver.adapter;
 import com.mahmoudsehsah.ghaithDriver.models.AddNewOffer;
 import com.mahmoudsehsah.ghaithDriver.models.Login;
 import com.mahmoudsehsah.ghaithDriver.models.Register;
+import com.mahmoudsehsah.ghaithDriver.models.SendMessage;
 import com.mahmoudsehsah.ghaithDriver.models.UpdateUnformation;
 import com.mahmoudsehsah.ghaithDriver.models.updateLocation;
+import com.mahmoudsehsah.ghaithDriver.models.updateUserId;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -52,6 +54,12 @@ public interface APIRequests {
             @Field("lat") double lat,
             @Field("lng") double lng);
 
+    @FormUrlEncoded
+    @POST("android/ghaith/updateUserId2")
+    Call<updateUserId> updateUserId(
+            @Field("id_user") String id_user,
+            @Field("userId") String userId);
+
     ////////////////////////////////// Trips   //////////////////////////////////
     @GET("android/ghaith/getNewTrip")
     Call<JSONResponseGetNewTrip> getJSONGetTrip();
@@ -75,6 +83,22 @@ public interface APIRequests {
 
     @GET("android/ghaith/getOffer")
     Call<JSONResponseGetNotfcation> getJSONNotfcation(@Query("id_user") String id_user);
+
+    @GET("android/ghaith/ChatListDriver")
+    Call<JSONResponseGetChatListUsrer> getJSONChatListUsrer(@Query("id_user") String id_user);
+
+    @GET("android/ghaith/Masseges")
+    Call<JSONResponseGetMasseges> getJSONMasseges(@Query("id_user") String id_user, @Query("id_driver") String id_driver);
+
+
+    @FormUrlEncoded
+    @POST("android/ghaith/SendMessage")
+    Call<SendMessage> SendMessagee(
+            @Field("message") String message,
+            @Field("client_id") String client_id,
+            @Field("driver_id") String driver_id,
+            @Field("send") String send
+    );
 
 }
 

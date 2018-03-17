@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.mahmoudsehsah.ghaithDriver.R;
 import com.mahmoudsehsah.ghaithDriver.session.SessionManager;
@@ -38,16 +39,18 @@ public class SplashActivity extends AppCompatActivity {
     public void changement() {
         SessionManager sessionManager = new SessionManager(getApplicationContext());
         if (sessionManager.isLoggedIn()) {
+            Log.d("isLoggedIn","isLoggedIn");
             sessionManager = new SessionManager(SplashActivity.this);
             HashMap<String, String> user = sessionManager.getUserDetails();
             String type = user.get(SessionManager.TYPE);
-            if(type == "driver"){
-                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-            }else{
-                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-
-            }
-           // startActivity(new Intent(SplashActivity.this, OrdersActivity.class));
+//             Log.d("type",type);
+//            if(type.equals("driver")){
+//                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+//            }else {
+//                startActivity(new Intent(SplashActivity.this, OrdersActivity.class));
+//
+//            }
+           startActivity(new Intent(SplashActivity.this, OrdersActivity.class));
         } else {
             Intent i = new Intent(SplashActivity.this, MainActivity.class);
             startActivity(i);

@@ -1,10 +1,17 @@
+plugins {
+    id 'com.onesignal.androidsdk.onesignal-gradle-plugin' version '0.8.1'
+}
 apply plugin: 'com.android.application'
 
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 android {
     compileSdkVersion 26
     defaultConfig {
         useLibrary 'org.apache.http.legacy'
         applicationId "com.mahmoudsehsah.ghaithDriver"
+        manifestPlaceholders = [manifestApplicationId          : "${applicationId}",
+                                onesignal_app_id               : "b9944dd9-90c9-4679-a29d-ba94d96c93a3",
+                                onesignal_google_project_number: "1041607232566"]
         minSdkVersion 16
         targetSdkVersion 26
         versionCode 1
@@ -48,7 +55,10 @@ dependencies {
     compile 'com.github.d-max:spots-dialog:0.7@aar'
     compile 'com.android.support:multidex:1.0.2'
     compile 'com.loopj.android:android-async-http:1.4.9'
+    compile 'com.onesignal:OneSignal:3.8.2@aar'
+    compile 'com.google.android.gms:play-services-gcm:+'
     implementation 'com.android.support:cardview-v7:27.0.0'
     implementation 'com.android.support:appcompat-v7:27.0.0'
     implementation 'com.android.support:design:27.0.0'
 }
+

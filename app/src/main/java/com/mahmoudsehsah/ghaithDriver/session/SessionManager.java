@@ -140,7 +140,7 @@ public class SessionManager {
     /**
      * Create login session
      */
-    public void createLoginSession(String name, String email, String user, String avatar, String mobile) {
+    public void createLoginSession(String name, String email, String user, String avatar, String mobile , String type) {
         // Storing login value as TRUE
         editor.putBoolean(IS_LOGIN, true);
 
@@ -151,7 +151,7 @@ public class SessionManager {
         editor.putString(KEY_EMAIL, email);
         editor.putString(USER_ID, user);
         editor.putString(AVATAR, avatar);
-
+        editor.putString(TYPE, type);
         // commit changes
         editor.commit();
     }

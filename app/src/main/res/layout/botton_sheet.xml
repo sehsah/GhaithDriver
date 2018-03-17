@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false">
+        <Button
+            android:layout_width="match_parent"
+            android:background="@drawable/btn_main"
+            android:textColor="@color/white"
+            android:id="@+id/sendImg"
+            android:layout_height="wrap_content"
+            android:text="ارسال صوره  "/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false">
+        <Button
+            android:layout_width="match_parent"
+            android:background="@drawable/btn_main"
+            android:textColor="@color/white"
+            android:id="@+id/finishOrder"
+            android:layout_height="wrap_content"
+            android:text=" انهاء الطلب"/>
+    </LinearLayout>
+
+</LinearLayout>

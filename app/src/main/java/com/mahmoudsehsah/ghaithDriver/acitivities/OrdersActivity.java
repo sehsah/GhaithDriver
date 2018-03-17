@@ -55,14 +55,18 @@ import com.mahmoudsehsah.ghaithDriver.adapter.APIRequests;
 import com.mahmoudsehsah.ghaithDriver.adapter.DataAdapterGetOrders;
 import com.mahmoudsehsah.ghaithDriver.adapter.JSONResponseGetOrders;
 import com.mahmoudsehsah.ghaithDriver.custom.CustomTypefaceSpan;
+import com.mahmoudsehsah.ghaithDriver.custom.MyApplication;
 import com.mahmoudsehsah.ghaithDriver.models.GetOrder;
+import com.mahmoudsehsah.ghaithDriver.models.updateUserId;
 import com.mahmoudsehsah.ghaithDriver.session.SessionManager;
+import com.onesignal.OneSignal;
 import com.thebrownarrow.permissionhelper.ActivityManagePermission;
 import com.thebrownarrow.permissionhelper.PermissionResult;
 import com.thebrownarrow.permissionhelper.PermissionUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import dmax.dialog.SpotsDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
@@ -123,6 +127,12 @@ public class OrdersActivity extends ActivityManagePermission implements GoogleAp
         });
 
 
+        SessionManager sessionManager = new SessionManager(OrdersActivity.this);
+        HashMap<String, String> user = sessionManager.getUserDetails();
+        String USER_ID  = user.get(SessionManager.USER_ID);
+        String KEY_NAME = user.get(SessionManager.KEY_NAME);
+        String AVATAR =  user.get(SessionManager.AVATAR);
+        Log.d("information user logged",USER_ID+"  "+KEY_NAME+"  "+AVATAR);
         NavigationView navigationViewv = (NavigationView) findViewById(R.id.nav_view);
         Menu m = navigationViewv.getMenu();
         for (int i=0;i<m.size();i++) {
@@ -145,6 +155,7 @@ public class OrdersActivity extends ActivityManagePermission implements GoogleAp
 
         initViews();
         AskPermission();
+        UpdateUserID();
 
     }
 
@@ -395,8 +406,13 @@ public class OrdersActivity extends ActivityManagePermission implements GoogleAp
             OrdersActivity.this.startActivity(mainIntent);
             OrdersActivity.this.finish();
 
-        } else if (id == R.id.nav_trip) {
+        } else if (id == R.id.nav_orders) {
             Intent mainIntent = new Intent(OrdersActivity.this,OrdersActivity.class);
+            OrdersActivity.this.startActivity(mainIntent);
+            OrdersActivity.this.finish();
+
+        } else if (id == R.id.nav_chat) {
+            Intent mainIntent = new Intent(OrdersActivity.this,ChatActivity.class);
             OrdersActivity.this.startActivity(mainIntent);
             OrdersActivity.this.finish();
 
@@ -432,5 +448,38 @@ public class OrdersActivity extends ActivityManagePermission implements GoogleAp
         sessionManagerr.logoutUser();
         startActivity(new Intent(OrdersActivity.this, LoginActivity.class));
         finish();
+    }
+    public  void UpdateUserID(){
+
+        OneSignal.startInit(this)
+                .inFocusDisplaying(OneSignal.OSInFocusDisplayOption.Notification)
+                .init();
+
+        OneSignal.idsAvailable(new OneSignal.IdsAvailableHandler() {
+            @Override
+            public void idsAvailable(String userId, String registrationId) {
+                Log.d("debug userId =", userId);
+                SessionManager sessionManager = new SessionManager(OrdersActivity.this);
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String id_user = user.get(SessionManager.USER_ID);
+                APIRequests APIRequests = ApiClient.getClient().create(APIRequests.class);
+                Call<updateUserId> call = APIRequests.updateUserId(id_user,userId);
+                call.enqueue(new Callback<updateUserId>() {
+                    @Override
+                    public void onResponse(Call<updateUserId> call, retrofit2.Response<updateUserId> response) {
+                        Log.d("suceess", "suceess");
+                    }
+
+                    @Override
+                    public void onFailure(Call<updateUserId> call, Throwable t) {
+                        Log.d("Error", t.getMessage());
+                    }
+
+                });
+                if(registrationId != null){
+                    Log.d("debug registrationId = " ,registrationId);
+                }
+            }
+        });
     }
 }

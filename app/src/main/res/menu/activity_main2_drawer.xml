@@ -8,6 +8,7 @@
         <item
             android:id="@+id/nav_trip"
             android:title="رحلاتي" />
+
         <item
             android:id="@+id/nav_settings"
             android:title="اعداد الحساب" />

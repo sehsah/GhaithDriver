@@ -1,12 +1,16 @@
 package com.mahmoudsehsah.ghaithDriver.acitivities;
 
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -64,8 +68,10 @@ public class LoginActivity extends ActivityManagePermission {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.login);
+        if(!isConnected(LoginActivity.this)) buildDialog(LoginActivity.this).show();
+        else {
+            setContentView(R.layout.login);
+        }
 
 
         final SessionManager sessionManager = new SessionManager(getApplicationContext());
@@ -152,7 +158,7 @@ public class LoginActivity extends ActivityManagePermission {
 
         //final ProgressDialog loading = ProgressDialog.show(this,"جاري تحميل البيانات","من فضلك انتظر",false,false);
         final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.create();
+//        dialog.create();
         SpannableString ss=  new SpannableString("جاري  تسجيل الدخول");
         Typeface typeFace = Typeface.createFromAsset(getAssets(), "font/jf.ttf");
         ss.setSpan(new RelativeSizeSpan(1.0f), 0, ss.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -183,14 +189,14 @@ public class LoginActivity extends ActivityManagePermission {
                     String avatar = userDetails.getDriverPhoto();
                     String mobile = userDetails.getDriverTelephone();
                     String type = userDetails.getType();
-                    Log.d("type",type);
+                    Log.d("Login type",type);
                     Log.d("user_id",user_id);
-                    sessionManager.createLoginSession(name, email, user_id, avatar, mobile);
+                    sessionManager.createLoginSession(name, email, user_id, avatar, mobile ,type);
                     Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    if(type == "driver"){
+                    if(type.equals("driver")){
                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                    }else{
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                    }else {
+                        startActivity(new Intent(LoginActivity.this, OrdersActivity.class));
 
                     }
                 }else if(response.body().getSuccess().equalsIgnoreCase("0")){
@@ -212,6 +218,38 @@ public class LoginActivity extends ActivityManagePermission {
     }
 
 
+    public boolean isConnected(Context context) {
+
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netinfo = cm.getActiveNetworkInfo();
+
+        if (netinfo != null && netinfo.isConnectedOrConnecting()) {
+            android.net.NetworkInfo wifi = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+            android.net.NetworkInfo mobile = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+
+            if((mobile != null && mobile.isConnectedOrConnecting()) || (wifi != null && wifi.isConnectedOrConnecting())) return true;
+        else return false;
+        } else
+        return false;
+    }
+
+    public AlertDialog.Builder buildDialog(Context c) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(c);
+        builder.setTitle("No Internet Connection");
+        builder.setMessage("You need to have Mobile Data or wifi to access this. Press ok to Exit");
+
+        builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                finish();
+            }
+        });
+
+        return builder;
+    }
 
 //    public void changepassword_dialog() {
 //        final Dialog dialog = new Dialog(LoginActivity.this);
