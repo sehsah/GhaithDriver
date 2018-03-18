@@ -215,9 +215,12 @@ public class MessageActivity extends AppCompatActivity {
         HashMap<String, String> user = sessionManager.getUserDetails();
         String uid = user.get(SessionManager.USER_ID);
         String client_id = getIntent().getStringExtra("client_id");
+        String id_order = getIntent().getStringExtra("id_order");
+        Log.d("id_order",id_order);
         Log.d("client_id",client_id);
+        Log.d("id_driver",uid);
         APIRequests APIRequests = ApiClient.getClient().create(APIRequests.class);
-        Call<JSONResponseGetMasseges> call = APIRequests.getJSONMasseges(client_id,uid);
+        Call<JSONResponseGetMasseges> call = APIRequests.getJSONMasseges(client_id,uid,id_order);
         call.enqueue(new Callback<JSONResponseGetMasseges>() {
             @Override
             public void onResponse(Call<JSONResponseGetMasseges> call, retrofit2.Response<JSONResponseGetMasseges> response) {
@@ -232,6 +235,15 @@ public class MessageActivity extends AppCompatActivity {
                 Log.d("Error",t.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(MessageActivity.this, OrdersActivity.class));
+        finish();
+
     }
 
 }

@@ -25,12 +25,15 @@ import retrofit2.http.Query;
 public interface APIRequests {
 
     ////////////////////////////////// Auth  //////////////////////////////////
-    @FormUrlEncoded
+    @Multipart
     @POST("android/ghaith/processRegistrationDriver")
     Call<Register> register(
-            @Field("driver_telephone") String driver_telephone,
-            @Field("driver_password") String driver_password,
-            @Field("driver_username") String driver_username);
+            @Part("id_number") String id_number,
+            @Part MultipartBody.Part atteched1,
+            @Part MultipartBody.Part atteched2,
+            @Part("driver_telephone") String driver_telephone,
+            @Part("driver_password") String driver_password,
+            @Part("driver_username") String driver_username);
 
     @FormUrlEncoded
     @POST("android/ghaith/processLoginDriver")
@@ -78,17 +81,19 @@ public interface APIRequests {
             @Field("name_driver") String name_driver,
             @Field("text") String text,
             @Field("price") String price,
+            @Field("time") String time,
+            @Field("description") String description,
             @Field("id_order") String id_order
     );
 
-    @GET("android/ghaith/getOffer")
-    Call<JSONResponseGetNotfcation> getJSONNotfcation(@Query("id_user") String id_user);
+    @GET("android/ghaith/getnotifcation")
+    Call<JSONResponseGetNotfcation> getJSONNotfcation(@Query("id") String id);
 
     @GET("android/ghaith/ChatListDriver")
     Call<JSONResponseGetChatListUsrer> getJSONChatListUsrer(@Query("id_user") String id_user);
 
     @GET("android/ghaith/Masseges")
-    Call<JSONResponseGetMasseges> getJSONMasseges(@Query("id_user") String id_user, @Query("id_driver") String id_driver);
+    Call<JSONResponseGetMasseges> getJSONMasseges(@Query("id_user") String id_user, @Query("id_driver") String id_driver,@Query("id_order") String id_order);
 
 
     @FormUrlEncoded

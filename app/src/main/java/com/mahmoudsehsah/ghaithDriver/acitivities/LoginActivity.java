@@ -305,4 +305,14 @@ public class LoginActivity extends ActivityManagePermission {
 //        dialog.show();
 //
 //    }
+
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        finish();
+
+    }
 }

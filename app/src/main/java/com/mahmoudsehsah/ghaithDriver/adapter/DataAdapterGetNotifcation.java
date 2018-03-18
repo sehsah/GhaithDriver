@@ -66,7 +66,7 @@ public class DataAdapterGetNotifcation extends RecyclerView.Adapter<DataAdapterG
     @Override
     public void onBindViewHolder(DataAdapterGetNotifcation.ViewHolder viewHolder, int i) {
         viewHolder.text.setText(android.get(i).gettext());
-        viewHolder.id_driver.setText(android.get(i).getid_driver());
+        viewHolder.id_user.setText(android.get(i).getid_user());
         viewHolder.name_user.setText(android.get(i).getname_user());
         viewHolder.id.setText(android.get(i).getid_order());
         Picasso.with(context).load(android.get(i).getphoto_user()).placeholder(R.drawable.loading).into(viewHolder.photo_user);
@@ -82,7 +82,7 @@ public class DataAdapterGetNotifcation extends RecyclerView.Adapter<DataAdapterG
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         Typeface customTypeOne = Typeface.createFromAsset(itemView.getContext().getAssets(), "font/jf.ttf");
-        private TextView text,id_driver,name_user,price,id;
+        private TextView text,id_user,name_user,id;
         public ImageView photo_user;
 
         public ViewHolder(View view) {
@@ -92,6 +92,7 @@ public class DataAdapterGetNotifcation extends RecyclerView.Adapter<DataAdapterG
             photo_user = view.findViewById(R.id.photo_user);
             name_user = view.findViewById(R.id.name_user);
             id = view.findViewById(R.id.id);
+            id_user =  view.findViewById(R.id.id_user);
             text.setTypeface(customTypeOne);
         }
 

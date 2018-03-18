@@ -73,6 +73,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import dmax.dialog.SpotsDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
@@ -119,7 +120,7 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
         });
 
 
-// Obtain the SupportMapFragment and get notified when the map is ready to be used.
+        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -185,6 +186,7 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
             }
         }
         Log.d("Single my location", String.valueOf(new LatLng(Mylatitude,Mylongitude)));
+
         String id_item = getIntent().getStringExtra("id_item");
         Log.d("id_item",id_item);
 
@@ -197,6 +199,10 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
         String lng_market1 = getIntent().getStringExtra("lng_market");
         double lng_market = Double.parseDouble(lng_market1);
         Log.d("mapt info",lat_user+"-"+lng_user+"-"+lat_market+"-"+lng_market);
+
+        String description_val = getIntent().getStringExtra("description_val");
+        Log.d("description_val",description_val);
+
 
         LatLng me = new LatLng(Mylatitude, Mylongitude);
         LatLng client = new LatLng(lat_user, lng_user);
@@ -212,6 +218,7 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
 
     private void AcceptedOrder() {
         EditText price_driver =  findViewById(R.id.price_driver);
+        TextView time =  findViewById(R.id.time);
         String  price_driver_value = price_driver.getText().toString();
         SessionManager sessionManager = new SessionManager(OrderSingleActivity.this);
         HashMap<String, String> user = sessionManager.getUserDetails();
@@ -225,13 +232,17 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
         Log.d("name_driver",name_driver);
         TextView id_user =  findViewById(R.id.id_user);
         String id_user_val = id_user.getText().toString();
+        String time_val = time.getText().toString();
+        String description_val = getIntent().getStringExtra("description_val");
+        Log.d("description_val",description_val);
+        Log.d("time_val",time_val);
         if (price_driver_value.matches("")){
             Toast.makeText(OrderSingleActivity.this,"يجب ادخال السعر اولا",Toast.LENGTH_SHORT).show();
         }else{
             final AlertDialog dialog = new SpotsDialog(OrderSingleActivity.this,"من فضلك انتظر");
             dialog.show();
             APIRequests APIRequests = ApiClient.getClient().create(APIRequests.class);
-            Call<AddNewOffer> call = APIRequests.AddNewOffer(id_user_val,uid,photo_driver,name_driver,text, price_driver_value, id_order);
+            Call<AddNewOffer> call = APIRequests.AddNewOffer(id_user_val,uid,photo_driver,name_driver,text, price_driver_value,time_val,description_val, id_order);
             call.enqueue(new Callback<AddNewOffer>() {
                 @Override
                 public void onResponse(Call<AddNewOffer> call, Response<AddNewOffer> response) {
@@ -446,6 +457,7 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
 
             for (int count = 0; count < jArr.length(); count++) {
                 JSONObject obj = jArr.getJSONObject(count);
+
                 String places= obj.getString("places");
                 TextView places_Text = findViewById(R.id.places);
                 places_Text.setText(places);
@@ -465,6 +477,17 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
                 String id_user = obj.getString("id_user");
                 TextView id_user_Text = findViewById(R.id.id_user);
                 id_user_Text.setText(id_user);
+
+                String lat_market1 = getIntent().getStringExtra("lat_market");
+                double lat_market = Double.parseDouble(lat_market1);
+                String lng_market1 = getIntent().getStringExtra("lng_market");
+                double lng_market = Double.parseDouble(lng_market1);
+                double distanceToMarket = distance(Mylatitude,Mylongitude,lat_market,lng_market);
+                String distanceToMarketNew = String.format(Locale.ENGLISH, "%.3f", distanceToMarket/1000);
+                Log.d("distanceToMarket1", String.valueOf(distanceToMarketNew));
+                TextView kmToClient_text = findViewById(R.id.kmToClient);
+                kmToClient_text.setText(distanceToMarketNew);
+
             }
         }
 
@@ -596,4 +619,35 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
             if(points.size()!=0)mMap.addPolyline(lineOptions);//to avoid crash
         }
     }
+
+    private double distance(double lat1, double lon1, double lat2, double lon2) {
+        double theta = lon1 - lon2;
+        double dist = Math.sin(deg2rad(lat1))
+                * Math.sin(deg2rad(lat2))
+                + Math.cos(deg2rad(lat1))
+                * Math.cos(deg2rad(lat2))
+                * Math.cos(deg2rad(theta));
+        dist = Math.acos(dist);
+        dist = rad2deg(dist);
+        dist = dist * 60 * 1.1515;
+        return (dist);
+    }
+
+    private double deg2rad(double deg) {
+        return (deg * Math.PI / 180.0);
+    }
+
+    private double rad2deg(double rad) {
+        return (rad * 180.0 / Math.PI);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(OrderSingleActivity.this, OrdersActivity.class));
+        finish();
+
+    }
+
 }

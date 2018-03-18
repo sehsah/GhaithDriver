@@ -2,6 +2,7 @@ package com.mahmoudsehsah.ghaithDriver.acitivities;
 
 import android.annotation.TargetApi;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
@@ -103,6 +104,15 @@ public class NotifcationActivity extends AppCompatActivity {
                 Toast.makeText(NotifcationActivity.this,"Error",Toast.LENGTH_LONG).show();
             }
         });
+
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(NotifcationActivity.this, MainActivity.class));
+        finish();
 
     }
 

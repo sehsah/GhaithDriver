@@ -109,12 +109,52 @@
                         android:textColorHint="#fff"
                         android:textAlignment="center" />
 
-                    <Spinner
-                        android:layout_width="wrap_content"
-                        android:id="@+id/spinner1"
+                    <EditText
+                        android:id="@+id/id_number"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:hint=" رقم الهويه"
                         android:background="@drawable/rounded_edittext"
                         android:padding="15dp"
+                        android:singleLine="true"
+                        android:inputType="number"
+                        android:textColor="#fff"
+                        android:textColorHint="#fff"
+                        android:textAlignment="center" />
+
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:id="@+id/spinner1"
+                        android:spinnerMode="dialog"
+                        android:popupBackground="#000"
+                        style="@style/Widget.AppCompat.DropDownItem.Spinner"
+                        android:background="@drawable/rounded_edittext"
                         android:layout_height="wrap_content" />
+
+                    <Button
+                        android:id="@+id/img1"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_edittext"
+                        android:text=" صوره الهويه "
+                        android:textAllCaps="false"
+                        android:textColor="#fff"
+                        android:padding="15dp"
+                        android:layout_marginTop="10dp"
+                        android:textSize="18dp" />
+
+                    <Button
+                        android:id="@+id/img2"
+                        android:layout_marginTop="10dp"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/rounded_edittext"
+                        android:text=" صوره الرخصه "
+                        android:textAllCaps="false"
+                        android:textColor="#fff"
+                        android:padding="15dp"
+                        android:textSize="18dp" />
 
                     <Button
                         android:id="@+id/sign_up"
@@ -122,7 +162,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dip"
                         android:background="@drawable/btn_background"
-                        android:text="تسجيل دخول"
+                        android:text="تسجيل "
                         android:textAllCaps="false"
                         android:textColor="#fff"
                         android:padding="35px"

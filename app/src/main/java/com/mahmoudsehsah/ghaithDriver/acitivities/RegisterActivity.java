@@ -5,14 +5,19 @@ import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -22,8 +27,11 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 
@@ -48,13 +56,21 @@ import com.mahmoudsehsah.ghaithDriver.custom.CheckConnection;
 import com.mahmoudsehsah.ghaithDriver.session.SessionManager;
 
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.thebrownarrow.permissionhelper.ActivityManagePermission;
 import com.thebrownarrow.permissionhelper.PermissionResult;
 import com.thebrownarrow.permissionhelper.PermissionUtils;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import me.anwarshahriar.calligrapher.Calligrapher;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -67,7 +83,7 @@ public class RegisterActivity extends ActivityManagePermission implements Google
         LocationListener {
     String permissionAsk[] = {PermissionUtils.Manifest_CAMERA, PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, PermissionUtils.Manifest_READ_EXTERNAL_STORAGE, PermissionUtils.Manifest_ACCESS_FINE_LOCATION, PermissionUtils.Manifest_ACCESS_COARSE_LOCATION};
     RelativeLayout relative_signin;
-    EditText driver_password, input_confirmPassword, driver_telephone, driver_username;
+    EditText driver_password, input_confirmPassword, driver_telephone, driver_username ,id_number;
     AppCompatButton sign_up;
     SwipeRefreshLayout swipeRefreshLayout;
     SessionManager sessionManager;
@@ -77,6 +93,10 @@ public class RegisterActivity extends ActivityManagePermission implements Google
     private Double currentLatitude;
     private Double currentLongitude;
     private View rootView;
+    Typeface tfavv;
+    String imagePath,imagePath2;
+    Button  img1 ,img2;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,16 +108,36 @@ public class RegisterActivity extends ActivityManagePermission implements Google
             startActivity(new Intent(RegisterActivity.this, HomeActivity.class));
         }
 
-        //get the spinner from the xml.
         Spinner dropdown = findViewById(R.id.spinner1);
-        String[] items = new String[]{"driver", "delivery"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        dropdown.setAdapter(adapter);
+        List<String> texts = new ArrayList<String>();
+        texts.add("سائق");
+        texts.add("مندوب");
+
+        final List<String> urls = new ArrayList<String>();
+        urls.add("driver");
+        urls.add("delivery");
+        spinner2meth();
+
+        dropdown.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                String url = urls.get(i);
+                Log.d("url",url);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                // do nothing
+            }
+        });
 
         Calligrapher calligrapher = new Calligrapher(this);
         calligrapher.setFont(this, "font/jf.ttf", true);
+
         BindView();
+
         AskPermission();
+
         sign_up.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,8 +152,51 @@ public class RegisterActivity extends ActivityManagePermission implements Google
                 }
             }
         });
+
+        img1 = findViewById(R.id.img1);
+        img1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
+            }
+        });
+
+        img2 = findViewById(R.id.img2);
+        img2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage2();
+            }
+        });
     }
 
+    public <ViewGroup> void spinner2meth(){
+        List<String> texts = new ArrayList<String>();
+        texts.add("سائق");
+        texts.add("مندوب");
+
+        Spinner mySpinner = findViewById(R.id.spinner1);
+           ArrayAdapter<String>  adapter = new ArrayAdapter<String>(this, R.layout.spinner_item, texts){
+
+            public View getView(int position, View convertView, android.view.ViewGroup parent) {
+
+
+
+                tfavv = Typeface.createFromAsset(getAssets(),"font/jf.ttf");
+                TextView v = (TextView) super.getView(position, convertView, parent);
+                v.setTypeface(tfavv);
+                return v;
+            }
+
+            public View getDropDownView(int position, View convertView, android.view.ViewGroup parent) {
+                TextView v = (TextView) super.getView(position, convertView, parent);
+                v.setTypeface(tfavv);
+                return v;
+            }
+        };
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        mySpinner.setAdapter(adapter);
+    }
 
     public Boolean validate() {
         Boolean value = true;
@@ -142,6 +225,12 @@ public class RegisterActivity extends ActivityManagePermission implements Google
         } else {
             input_confirmPassword.setError(null);
         }
+        if (id_number.getText().toString().trim().equals("")) {
+            id_number.setError("هذا الحقل مطلوب");
+            value = false;
+        } else {
+            driver_username.setError(null);
+        }
         return value;
     }
 
@@ -152,6 +241,7 @@ public class RegisterActivity extends ActivityManagePermission implements Google
         driver_username = (EditText)findViewById(R.id.username);
         driver_telephone =  findViewById(R.id.phone);
         sign_up =  findViewById(R.id.sign_up);
+        id_number   =  findViewById(R.id.id_number);
         sessionManager = new SessionManager(getApplicationContext());
         swipeRefreshLayout = findViewById(R.id.swipe_refresh);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -181,9 +271,26 @@ public class RegisterActivity extends ActivityManagePermission implements Google
         final String driver_telephone_val = driver_telephone.getText().toString().trim();
         final String driver_password_val = driver_password.getText().toString().trim();
         final String driver_username_val = driver_username.getText().toString().trim();
+        final String id_number_val = id_number.getText().toString().trim();
 
         APIRequests APIRequests = ApiClient.getClient().create(APIRequests.class);
-        Call<Register> call = APIRequests.register(driver_telephone_val, driver_password_val,driver_username_val);
+        MultipartBody.Part  images = null;
+        MultipartBody.Part  images2 = null;
+
+        if(imagePath != null) {
+            File file = new File(imagePath);
+            Log.d("file", String.valueOf(file));
+            RequestBody requestFile = RequestBody.create(MediaType.parse("*/*"), file);
+            images = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+        }
+        if(imagePath2 != null) {
+            File file2 = new File(imagePath2);
+            Log.d("file2", String.valueOf(file2));
+            RequestBody requestFile2 = RequestBody.create(MediaType.parse("*/*"), file2);
+            images2 = MultipartBody.Part.createFormData("file2", file2.getName(), requestFile2);
+        }
+
+        Call<Register> call = APIRequests.register(id_number_val,images,images2,driver_telephone_val, driver_password_val,driver_username_val);
         call.enqueue(new Callback<Register>() {
 
             @Override
@@ -412,6 +519,30 @@ public class RegisterActivity extends ActivityManagePermission implements Google
                 //Write your code if there's no result
             }
         }
+
+        if (resultCode == RESULT_OK && requestCode == 100) {
+            if (data == null) {
+                Toast.makeText(getApplicationContext(),"Unable to pick image",Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            Uri imageUri = data.getData();
+            imagePath = getRealPathFromURI(imageUri);
+            img1.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_finish, 0, 0, 0);
+            img1.setTextColor(Color.GREEN);
+
+        }
+
+        if (resultCode == RESULT_OK && requestCode == 102) {
+            if (data == null) {
+                Toast.makeText(getApplicationContext(),"Unable to pick image",Toast.LENGTH_LONG).show();
+                return;
+            }
+            Uri imageUri = data.getData();
+            imagePath2 = getRealPathFromURI(imageUri);
+            img2.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_finish, 0, 0, 0);
+            img2.setTextColor(Color.GREEN);
+        }
     }
 
     public void AskPermission() {
@@ -446,5 +577,46 @@ public class RegisterActivity extends ActivityManagePermission implements Google
 
         }
         return false;
+    }
+
+    private void chooseImage() {
+        final Intent galleryIntent = new Intent();
+        galleryIntent.setType("image/*");
+        galleryIntent.setAction(Intent.ACTION_PICK);
+
+        final Intent chooserIntent = Intent.createChooser(galleryIntent, "Choose image");
+        startActivityForResult(chooserIntent, 100);
+
+    }
+
+    private void chooseImage2() {
+        final Intent galleryIntent = new Intent();
+        galleryIntent.setType("image/*");
+        galleryIntent.setAction(Intent.ACTION_PICK);
+
+        final Intent chooserIntent = Intent.createChooser(galleryIntent, "Choose image");
+        startActivityForResult(chooserIntent, 102);
+
+    }
+
+
+    private String getRealPathFromURI(Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+        CursorLoader loader = new CursorLoader(getApplicationContext(), contentUri, proj, null, null, null);
+        Cursor cursor = loader.loadInBackground();
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        String result  = cursor.getString(column_index);
+        cursor.close();
+        return result ;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+        finish();
+
     }
 }

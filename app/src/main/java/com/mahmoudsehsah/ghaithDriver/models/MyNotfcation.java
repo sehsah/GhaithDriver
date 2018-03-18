@@ -10,7 +10,7 @@ package com.mahmoudsehsah.ghaithDriver.models;
 public class MyNotfcation {
 
     private String id;
-    private String id_driver;
+    private String id_user;
     private String id_order;
     private String text;
     private String photo_user;
@@ -20,8 +20,8 @@ public class MyNotfcation {
         return id;
     }
     public void setId(String id) {this.id = id;}
-    public String getid_driver() {return id_driver;}
-    public void setid_driver(String id_driver) {this.id_driver = id_driver;}
+    public String getid_user() {return id_user;}
+    public void setid_user(String id_user) {this.id_user = id_user;}
     public String getid_order() {
         return id_order;
     }
