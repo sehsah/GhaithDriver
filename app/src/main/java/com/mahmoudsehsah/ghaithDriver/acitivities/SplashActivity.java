@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.mahmoudsehsah.ghaithDriver.R;
+import com.mahmoudsehsah.ghaithDriver.Server.FCMRegistrationService;
 import com.mahmoudsehsah.ghaithDriver.session.SessionManager;
 
 import java.util.HashMap;
@@ -28,6 +29,7 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.splash_activity);
         int SPLASH_TIME_OUT = 1000;
         changement();
+        startService(new Intent(this,FCMRegistrationService.class));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             Configuration configuration = getResources().getConfiguration();
@@ -50,7 +52,7 @@ public class SplashActivity extends AppCompatActivity {
 //                startActivity(new Intent(SplashActivity.this, OrdersActivity.class));
 //
 //            }
-           startActivity(new Intent(SplashActivity.this, OrdersActivity.class));
+           startActivity(new Intent(SplashActivity.this, ShowMarketActivity.class));
         } else {
             Intent i = new Intent(SplashActivity.this, MainActivity.class);
             startActivity(i);

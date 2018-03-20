@@ -3,6 +3,8 @@ package com.mahmoudsehsah.ghaithDriver.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by mahmoud on 2/20/2018.
  */
@@ -45,7 +47,17 @@ public class User {
     @SerializedName("busy")
     @Expose
     private String busy;
+    @SerializedName("data")
+    @Expose
+    private List<User> data = null;
 
+
+    public List<User> getData() {
+        return data;
+    }
+    public void setData(List<User> data) {
+        this.data = data;
+    }
     public String getDriverId() {
         return driverId;
     }

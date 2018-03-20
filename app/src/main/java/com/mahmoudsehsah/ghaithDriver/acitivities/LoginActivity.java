@@ -196,7 +196,7 @@ public class LoginActivity extends ActivityManagePermission {
                     if(type.equals("driver")){
                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                     }else {
-                        startActivity(new Intent(LoginActivity.this, OrdersActivity.class));
+                        startActivity(new Intent(LoginActivity.this, ShowMarketActivity.class));
 
                     }
                 }else if(response.body().getSuccess().equalsIgnoreCase("0")){

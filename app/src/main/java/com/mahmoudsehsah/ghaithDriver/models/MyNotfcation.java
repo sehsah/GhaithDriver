@@ -15,6 +15,8 @@ public class MyNotfcation {
     private String text;
     private String photo_user;
     private String name_user;
+    private String id_market;
+    private String name_market;
 
     public String getId() {
         return id;
@@ -38,4 +40,14 @@ public class MyNotfcation {
         return name_user;
     }
     public void setpname_user(String name_user) {this.name_user = name_user;}
+    public String getid_market() {
+        return id_market;
+    }
+    public void setid_market(String id_market) {this.id_market = id_market;}
+
+    public String getname_market() {
+        return name_market;
+    }
+    public void setname_market(String name_market) {this.id_market = name_market;}
+
 }

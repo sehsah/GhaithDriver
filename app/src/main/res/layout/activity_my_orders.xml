@@ -19,7 +19,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text=""
+            android:text="طلباتي"
             android:textSize="16dp"
             android:textColor="@color/white"
             android:layout_gravity="right"
@@ -35,7 +35,7 @@
         android:gravity="center"
         android:layout_gravity="center_horizontal"
         android:visibility="gone"
-        android:text="لا يوجد طلبات الان في هذا المتجر" />
+        android:text="لا يوجد طلبات الان " />
 
     <ScrollView
         android:layout_width="fill_parent"

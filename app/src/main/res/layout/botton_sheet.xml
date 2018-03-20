@@ -2,6 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="#c7c7c7"
+    android:layout_margin="20dp"
     android:orientation="vertical">
 
     <LinearLayout
@@ -27,7 +30,21 @@
             android:layout_width="match_parent"
             android:background="@drawable/btn_main"
             android:textColor="@color/white"
-            android:id="@+id/finishOrder"
+            android:id="@+id/editepay"
+            android:layout_height="wrap_content"
+            android:text="تعديل الفاتوره"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false">
+        <Button
+            android:layout_width="match_parent"
+            android:background="@drawable/btn_main"
+            android:textColor="@color/white"
+            android:id="@+id/finishorder"
             android:layout_height="wrap_content"
             android:text=" انهاء الطلب"/>
     </LinearLayout>

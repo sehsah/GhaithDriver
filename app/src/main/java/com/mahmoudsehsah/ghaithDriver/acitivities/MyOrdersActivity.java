@@ -2,25 +2,17 @@ package com.mahmoudsehsah.ghaithDriver.acitivities;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,10 +22,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,14 +41,12 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.mahmoudsehsah.ghaithDriver.R;
 import com.mahmoudsehsah.ghaithDriver.Server.ApiClient;
 import com.mahmoudsehsah.ghaithDriver.adapter.APIRequests;
-import com.mahmoudsehsah.ghaithDriver.adapter.DataAdapterGetOrders;
+import com.mahmoudsehsah.ghaithDriver.adapter.DataAdapterGetMyOrders;
+import com.mahmoudsehsah.ghaithDriver.adapter.JSONResponseGetMyOrders;
 import com.mahmoudsehsah.ghaithDriver.adapter.JSONResponseGetOrders;
 import com.mahmoudsehsah.ghaithDriver.custom.CustomTypefaceSpan;
-import com.mahmoudsehsah.ghaithDriver.custom.MyApplication;
 import com.mahmoudsehsah.ghaithDriver.models.GetOrder;
-import com.mahmoudsehsah.ghaithDriver.models.updateUserId;
 import com.mahmoudsehsah.ghaithDriver.session.SessionManager;
-import com.onesignal.OneSignal;
 import com.thebrownarrow.permissionhelper.ActivityManagePermission;
 import com.thebrownarrow.permissionhelper.PermissionResult;
 import com.thebrownarrow.permissionhelper.PermissionUtils;
@@ -69,40 +55,34 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import dmax.dialog.SpotsDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class OrdersActivity extends ActivityManagePermission implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener  {
+public class MyOrdersActivity extends ActivityManagePermission implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+
     private Toolbar mTopToolbar;
     // Declare Variables
     String permissionAsk[] = {PermissionUtils.Manifest_CAMERA, PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, PermissionUtils.Manifest_READ_EXTERNAL_STORAGE, PermissionUtils.Manifest_ACCESS_FINE_LOCATION, PermissionUtils.Manifest_ACCESS_COARSE_LOCATION};
     private final static int CONNECTION_FAILURE_RESOLUTION_REQUEST = 9000;
     private GoogleApiClient mGoogleApiClient;
     private LocationRequest mLocationRequest;
-
     private ArrayList<GetOrder> data;
-    private DataAdapterGetOrders adapter;
+    private DataAdapterGetMyOrders adapter;
     private RecyclerView recyclerView;
     boolean doubleBackToExitPressedOnce = false;
-
-     Double currentLatitude;
-     Double currentLongitude;
-
+    Double currentLatitude;
+    Double currentLongitude;
     private TextView emptyView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_orders);
-
+        setContentView(R.layout.activity_my_orders);
         // change font
         Calligrapher calligrapher = new Calligrapher(this);
         calligrapher.setFont(this, "font/jf.ttf", true);
-
 
 
         //toolbar
@@ -111,15 +91,12 @@ public class OrdersActivity extends ActivityManagePermission implements GoogleAp
         getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        TextView toolbar_title = findViewById(R.id.toolbar_title);
-        final String name = getIntent().getStringExtra("name");
-        toolbar_title.setText(name);
         initViews();
         AskPermission();
 
     }
 
-    private void initViews(){
+    private void initViews() {
         recyclerView = findViewById(R.id.recycler_view);
         emptyView = findViewById(R.id.empty_view);
         recyclerView.setHasFixedSize(true);
@@ -129,9 +106,9 @@ public class OrdersActivity extends ActivityManagePermission implements GoogleAp
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    private void loadJSON(){
+    private void loadJSON() {
         final ProgressDialog dialog = new ProgressDialog(this);
-        SpannableString ss=  new SpannableString("جاري جلب البيانات");
+        SpannableString ss = new SpannableString("جاري جلب البيانات");
         Typeface typeFace = Typeface.createFromAsset(getAssets(), "font/jf.ttf");
         ss.setSpan(new RelativeSizeSpan(1.0f), 0, ss.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         ss.setSpan(new CustomTypefaceSpan("", typeFace), 0, ss.length(), 0);
@@ -139,23 +116,22 @@ public class OrdersActivity extends ActivityManagePermission implements GoogleAp
         dialog.show();
         //////////////////
         //////////////////
-       final String idMarket = getIntent().getStringExtra("idMarket");
-
-       Log.e("idMARKET",idMarket);
+        SessionManager sessionManager = new SessionManager(MyOrdersActivity.this);
+        HashMap<String, String> user = sessionManager.getUserDetails();
+        String uid = user.get(SessionManager.USER_ID);
         APIRequests APIRequests = ApiClient.getClient().create(APIRequests.class);
-        Call<JSONResponseGetOrders> call = APIRequests.getJSONGetOrder(idMarket);
-        call.enqueue(new Callback<JSONResponseGetOrders>() {
+        Call<JSONResponseGetMyOrders> call = APIRequests.JSONResponseGetMyOrders(uid);
+        call.enqueue(new Callback<JSONResponseGetMyOrders>() {
             @Override
-            public void onResponse(Call<JSONResponseGetOrders> call, Response<JSONResponseGetOrders> response) {
-              dialog.dismiss();
-                JSONResponseGetOrders JSONResponseGetOrders = response.body();
-                data = new ArrayList<>(Arrays.asList(JSONResponseGetOrders.getAndroid()));
-                adapter = new DataAdapterGetOrders(getApplicationContext(),data);
+            public void onResponse(Call<JSONResponseGetMyOrders> call, Response<JSONResponseGetMyOrders> response) {
+                dialog.dismiss();
+                JSONResponseGetMyOrders JSONResponseGetMyOrders = response.body();
+                data = new ArrayList<>(Arrays.asList(JSONResponseGetMyOrders.getAndroid()));
+                adapter = new DataAdapterGetMyOrders(getApplicationContext(), data);
                 if (data.isEmpty()) {
                     recyclerView.setVisibility(View.GONE);
                     emptyView.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     recyclerView.setVisibility(View.VISIBLE);
                     emptyView.setVisibility(View.GONE);
                 }
@@ -163,16 +139,14 @@ public class OrdersActivity extends ActivityManagePermission implements GoogleAp
             }
 
             @Override
-            public void onFailure(Call<JSONResponseGetOrders> call, Throwable t) {
-                Log.d("Error",t.getMessage());
+            public void onFailure(Call<JSONResponseGetMyOrders> call, Throwable t) {
+                Log.d("Error", t.getMessage());
                 dialog.dismiss();
-                Toast.makeText(OrdersActivity.this,"Error",Toast.LENGTH_LONG).show();
+                Toast.makeText(MyOrdersActivity.this, "Error", Toast.LENGTH_LONG).show();
             }
         });
 
     }
-
-
 
 
     public void getCurrentlOcation() {
@@ -232,7 +206,7 @@ public class OrdersActivity extends ActivityManagePermission implements GoogleAp
                                 // Show the dialog by calling
                                 // startResolutionForResult(),
                                 // and setting the result in onActivityResult().
-                                status.startResolutionForResult(OrdersActivity.this, 1000);
+                                status.startResolutionForResult(MyOrdersActivity.this, 1000);
                             } catch (IntentSender.SendIntentException e) {
                                 // Ignore the error.
                             }
@@ -353,18 +327,13 @@ public class OrdersActivity extends ActivityManagePermission implements GoogleAp
 
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         super.onBackPressed();
         final String idMarket = getIntent().getStringExtra("idMarket");
         Intent intent = new Intent(getBaseContext(), ShowMarketActivity.class);
-        intent.putExtra("idMarket",idMarket);
+        intent.putExtra("idMarket", idMarket);
         startActivity(intent);
         finish();
 
     }
-
-
-
-
 }

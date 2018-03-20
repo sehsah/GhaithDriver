@@ -3,7 +3,10 @@ package com.mahmoudsehsah.ghaithDriver.adapter;
 import com.mahmoudsehsah.ghaithDriver.models.AddNewOffer;
 import com.mahmoudsehsah.ghaithDriver.models.Login;
 import com.mahmoudsehsah.ghaithDriver.models.Register;
+import com.mahmoudsehsah.ghaithDriver.models.RegisterNewMarket;
 import com.mahmoudsehsah.ghaithDriver.models.SendMessage;
+import com.mahmoudsehsah.ghaithDriver.models.SendNotiFirbaseClient;
+import com.mahmoudsehsah.ghaithDriver.models.UpdateToken;
 import com.mahmoudsehsah.ghaithDriver.models.UpdateUnformation;
 import com.mahmoudsehsah.ghaithDriver.models.updateLocation;
 import com.mahmoudsehsah.ghaithDriver.models.updateUserId;
@@ -63,6 +66,11 @@ public interface APIRequests {
             @Field("id_user") String id_user,
             @Field("userId") String userId);
 
+    @FormUrlEncoded
+    @POST("android/ghaith/UpdateTokenDriver")
+    Call<UpdateToken> UpdateToken(
+            @Field("id_user") String id_user,
+            @Field("token") String token);
     ////////////////////////////////// Trips   //////////////////////////////////
     @GET("android/ghaith/getNewTrip")
     Call<JSONResponseGetNewTrip> getJSONGetTrip();
@@ -70,7 +78,10 @@ public interface APIRequests {
     ///////////////////////////////// Orders ////////////////////////////////////
 
     @GET("android/ghaith/getOrders")
-    Call<JSONResponseGetOrders> getJSONGetOrder();
+    Call<JSONResponseGetOrders> getJSONGetOrder(@Query("id_market") String id_market);
+
+    @GET("android/ghaith/getmyOrders")
+    Call<JSONResponseGetMyOrders> JSONResponseGetMyOrders(@Query("id_user") String id_user);
 
     @FormUrlEncoded
     @POST("android/ghaith/AddNewOffer")
@@ -95,7 +106,6 @@ public interface APIRequests {
     @GET("android/ghaith/Masseges")
     Call<JSONResponseGetMasseges> getJSONMasseges(@Query("id_user") String id_user, @Query("id_driver") String id_driver,@Query("id_order") String id_order);
 
-
     @FormUrlEncoded
     @POST("android/ghaith/SendMessage")
     Call<SendMessage> SendMessagee(
@@ -105,6 +115,20 @@ public interface APIRequests {
             @Field("send") String send
     );
 
+    @FormUrlEncoded
+    @POST("android/ghaith/SendNotiFirbaseClient")
+    Call<SendNotiFirbaseClient> SendNotiFirbaseClient(
+            @Field("id_client") String client_id,
+            @Field("title") String title
+    );
+
+
+    @FormUrlEncoded
+    @POST("android/ghaith/RegisterNewMarket")
+    Call<RegisterNewMarket> RegisterNewMarket(
+            @Field("id_driver") String id_driver,
+            @Field("id_market") String id_market
+    );
 }
 
 

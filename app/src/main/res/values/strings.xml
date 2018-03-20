@@ -128,4 +128,6 @@
     <string name="add">&#xf067;</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="arrow_right">&#xf0da;</string>
+    <string name="arrow_left">&#xf0d9;</string>
 </resources>

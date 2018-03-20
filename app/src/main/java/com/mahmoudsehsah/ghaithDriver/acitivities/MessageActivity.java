@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -162,7 +163,14 @@ public class MessageActivity extends AppCompatActivity {
 
     public void openBottomSheet() {
         View view = getLayoutInflater().inflate(R.layout.botton_sheet, null);
+        Typeface customTypeOne = Typeface.createFromAsset(getAssets(), "font/jf.ttf");
         Button sendImg = view.findViewById(R.id.sendImg);
+        Button editepay = view.findViewById(R.id.editepay);
+        Button finishorder = view.findViewById(R.id.finishorder);
+        sendImg.setTypeface(customTypeOne);
+        editepay.setTypeface(customTypeOne);
+        finishorder.setTypeface(customTypeOne);
+
         final Dialog mBottomSheetDialog = new Dialog(MessageActivity.this, R.style.MaterialDialogSheet);
         mBottomSheetDialog.setContentView(view);
         mBottomSheetDialog.setCancelable(true);
@@ -179,11 +187,19 @@ public class MessageActivity extends AppCompatActivity {
     }
     private void SendNewMessagr() {
 
+
+
         SessionManager sessionManager = new SessionManager(MessageActivity.this);
         HashMap<String, String> user = sessionManager.getUserDetails();
         String driver_id  = user.get(SessionManager.USER_ID);
         String client_id = getIntent().getStringExtra("client_id");
         String message = messageArea.getText().toString();
+
+//        ChatList msg = new ChatList();
+//        msg.setMessage(message);
+//        data.add(msg);
+//        adapter.notifyItemInserted(data.size() - 1);
+//        recyclerView.scrollToPosition(data.size() - 1);
 
         APIRequests APIRequests = ApiClient.getClient().create(APIRequests.class);
         Call<SendMessage> call = APIRequests.SendMessagee(message, client_id,driver_id,driver_id);
@@ -192,6 +208,8 @@ public class MessageActivity extends AppCompatActivity {
             public void onResponse(Call<SendMessage> call, retrofit2.Response<SendMessage> response) {
                 finish();
                 startActivity(getIntent());
+                recyclerView.scrollToPosition(data.size() - 1);
+
             }
 
             @Override

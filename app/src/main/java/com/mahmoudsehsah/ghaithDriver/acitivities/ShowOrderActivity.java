@@ -2,22 +2,16 @@ package com.mahmoudsehsah.ghaithDriver.acitivities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,7 +20,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -34,7 +27,6 @@ import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationAvailability;
-import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
@@ -52,12 +44,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.mahmoudsehsah.ghaithDriver.R;
-import com.mahmoudsehsah.ghaithDriver.Server.ApiClient;
-import com.mahmoudsehsah.ghaithDriver.adapter.APIRequests;
 import com.mahmoudsehsah.ghaithDriver.adapter.DirectionsJSONParser;
 import com.mahmoudsehsah.ghaithDriver.custom.GPSTracker;
-import com.mahmoudsehsah.ghaithDriver.models.AddNewOffer;
-import com.mahmoudsehsah.ghaithDriver.models.SendNotiFirbaseClient;
 import com.mahmoudsehsah.ghaithDriver.session.SessionManager;
 
 import org.json.JSONArray;
@@ -76,49 +64,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import dmax.dialog.SpotsDialog;
 import me.anwarshahriar.calligrapher.Calligrapher;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class OrderSingleActivity extends AppCompatActivity  implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
+public class ShowOrderActivity extends AppCompatActivity  implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
     private String finalresult;
-    static double Mylatitude ,Mylongitude,workLatitude, workLongitude;
+    static double Mylatitude, Mylongitude, workLatitude, workLongitude;
     GPSTracker gps;
     private GoogleApiClient mGoogleApiClient;
     //maps main
     private GoogleMap mMap;
     private Location mLastLocation;
-     LocationManager mLocationManager;
-     LocationListener mLocationListener;
-     Double currentLatitude;
-     Double currentLongitude;
+    LocationManager mLocationManager;
+    LocationListener mLocationListener;
+    Double currentLatitude;
+    Double currentLongitude;
     static double lat, lng;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_single);
+        setContentView(R.layout.activity_show_order);
         new GetJsonData().execute();
 
         Calligrapher calligrapher = new Calligrapher(this);
         calligrapher.setFont(this, "font/jf.ttf", true);
 
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
-
-
-        Button accepted = findViewById(R.id.accepted);
-        accepted.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AcceptedOrder();
-            }
-        });
 
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -155,7 +130,7 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
                         case LocationSettingsStatusCodes.SUCCESS:
                             // All location settings are satisfied. The client can initialize location
                             // requests here.
-                            Log.d("open","open");
+                            Log.d("open", "open");
                             break;
                         case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
                             // Location settings are not satisfied. But could be fixed by showing the user
@@ -163,7 +138,7 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
                             try {
                                 // Show the dialog by calling startResolutionForResult(),
                                 // and check the result in onActivityResult().
-                                status.startResolutionForResult(OrderSingleActivity.this, 1000);
+                                status.startResolutionForResult(ShowOrderActivity.this, 1000);
                             } catch (IntentSender.SendIntentException e) {
                                 // Ignore the error.
                             }
@@ -177,19 +152,19 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
             });
         }
 
-        gps = new GPSTracker(OrderSingleActivity.this);
+        gps = new GPSTracker(ShowOrderActivity.this);
         if (gps.canGetLocation()) {
-            if (ContextCompat.checkSelfPermission(OrderSingleActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
+            if (ContextCompat.checkSelfPermission(ShowOrderActivity.this, Manifest.permission.ACCESS_FINE_LOCATION)
                     == PackageManager.PERMISSION_GRANTED) {
                 Mylatitude = gps.getLatitude();
                 Mylongitude = gps.getLongitude();
-                Log.d("my location", String.valueOf(new LatLng(Mylatitude,Mylongitude)));
+                Log.d("my location", String.valueOf(new LatLng(Mylatitude, Mylongitude)));
             }
         }
-        Log.d("Single my location", String.valueOf(new LatLng(Mylatitude,Mylongitude)));
+        Log.d("Single my location", String.valueOf(new LatLng(Mylatitude, Mylongitude)));
 
         String id_item = getIntent().getStringExtra("id_item");
-        Log.d("id_item",id_item);
+        Log.d("id_item", id_item);
 
         String lat_user1 = getIntent().getStringExtra("lat_user");
         double lat_user = Double.parseDouble(lat_user1);
@@ -199,10 +174,10 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
         double lat_market = Double.parseDouble(lat_market1);
         String lng_market1 = getIntent().getStringExtra("lng_market");
         double lng_market = Double.parseDouble(lng_market1);
-        Log.d("mapt info",lat_user+"-"+lng_user+"-"+lat_market+"-"+lng_market);
+        Log.d("mapt info", lat_user + "-" + lng_user + "-" + lat_market + "-" + lng_market);
 
         String description_val = getIntent().getStringExtra("description_val");
-        Log.d("description_val",description_val);
+        Log.d("description_val", description_val);
 
 
         LatLng me = new LatLng(Mylatitude, Mylongitude);
@@ -215,74 +190,17 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
         String url2 = getDirectionsUrl(market, client);
         DownloadTask downloadTask2 = new DownloadTask();
         downloadTask2.execute(url2);
-    }
 
-    private void AcceptedOrder() {
-        EditText price_driver =  findViewById(R.id.price_driver);
-        TextView time =  findViewById(R.id.time);
-        String  price_driver_value = price_driver.getText().toString();
-        SessionManager sessionManager = new SessionManager(OrderSingleActivity.this);
-        HashMap<String, String> user = sessionManager.getUserDetails();
-        String uid = user.get(SessionManager.USER_ID);
-        String photo_driver = user.get(SessionManager.AVATAR);
-        String name_driver = user.get(SessionManager.KEY_NAME);
-        String id_order =  getIntent().getStringExtra("id_item");
-        String text =  name_driver+" عرض جديد علي طلبك من السائق ";
-        Log.d("text",text);
-        Log.d("photo_driver",photo_driver);
-        Log.d("name_driver",name_driver);
-        TextView id_user =  findViewById(R.id.id_user);
-        String id_user_val = id_user.getText().toString();
-        String time_val = time.getText().toString();
-        String description_val = getIntent().getStringExtra("description_val");
-        Log.d("description_val",description_val);
-        Log.d("time_val",time_val);
-        if (price_driver_value.matches("")){
-            Toast.makeText(OrderSingleActivity.this,"يجب ادخال السعر اولا",Toast.LENGTH_SHORT).show();
-        }else{
-            final AlertDialog dialog = new SpotsDialog(OrderSingleActivity.this,"من فضلك انتظر");
-            dialog.show();
-            APIRequests APIRequests = ApiClient.getClient().create(APIRequests.class);
-            Call<AddNewOffer> call = APIRequests.AddNewOffer(id_user_val,uid,photo_driver,name_driver,text, price_driver_value,time_val,description_val, id_order);
-            call.enqueue(new Callback<AddNewOffer>() {
-                @Override
-                public void onResponse(Call<AddNewOffer> call, Response<AddNewOffer> response) {
-                    Toast.makeText(OrderSingleActivity.this,"تم ارسال العرض بنجاح",Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                    Intent intent = new Intent(getBaseContext(), ShowMarketActivity.class);
-                    SendNotiToClient();
-                    startActivity(intent);
-                }
-
-                @Override
-                public void onFailure(Call<AddNewOffer> call, Throwable t) {
-                    dialog.dismiss();
-                    Log.d("Error",t.getMessage());
-                }
-
-            });
-        }
-    }
-
-
-    private void SendNotiToClient() {
-        TextView id_user = findViewById(R.id.id_user);
-        String title = "عرض جديد علي طلبك";
-        String id_client = id_user.getText().toString();
-
-        APIRequests APIRequests = ApiClient.getClient().create(APIRequests.class);
-        Call<SendNotiFirbaseClient> call = APIRequests.SendNotiFirbaseClient(id_client,title);
-        call.enqueue(new Callback<SendNotiFirbaseClient>() {
+        Button chat = findViewById(R.id.chat);
+        chat.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onResponse(Call<SendNotiFirbaseClient> call, Response<SendNotiFirbaseClient> response) {
-            }
-
-            @Override
-            public void onFailure(Call<SendNotiFirbaseClient> call, Throwable t) {
-                Log.d("Error SendNotiToClient",t.getMessage());
+            public void onClick(View view) {
+                GoToChat();
             }
         });
     }
+
+
 
 
     @Override
@@ -307,7 +225,7 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
         mMap.addMarker(new MarkerOptions().position(new LatLng(market.latitude, market.longitude)).title("المتجر").icon(BitmapDescriptorFactory.fromResource(R.drawable.place_market)));
 
         mMap.moveCamera(CameraUpdateFactory.newLatLng(me));
-    //    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sy, 15));
+        //    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(sy, 15));
         if (ActivityCompat.checkSelfPermission(this,
                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]
@@ -319,17 +237,13 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
         mMap.getUiSettings().setZoomControlsEnabled(false);
 
 
-
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         builder.include(me);
         builder.include(market);
-        builder.include(client);
+        //builder.include(client);
         LatLngBounds bounds = builder.build();
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), width, height, 10));
         CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
-        mMap.animateCamera(cu);
+//        mMap.animateCamera(cu);
     }
 
 
@@ -394,7 +308,6 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
     }
 
 
-
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         setUpMap();
@@ -415,6 +328,21 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
 
     }
 
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
+    }
+
     private class GetJsonData extends AsyncTask<Void, Void, Void> {
 
 
@@ -427,7 +355,7 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
         @Override
         protected Void doInBackground(Void... arg0) {
             final String id = getIntent().getStringExtra("id_item");
-            String getUrl = "http://yaqeensa.com/android/ghaith/orderSingle?id="+id;
+            String getUrl = "http://yaqeensa.com/android/ghaith/orderSingle?id=" + id;
             try {
                 URL url;
                 HttpURLConnection urlConnection = null;
@@ -484,19 +412,19 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
             for (int count = 0; count < jArr.length(); count++) {
                 JSONObject obj = jArr.getJSONObject(count);
 
-                String places= obj.getString("places");
+                String places = obj.getString("places");
                 TextView places_Text = findViewById(R.id.places);
                 places_Text.setText(places);
 
-                String name= obj.getString("name");
+                String name = obj.getString("name");
                 TextView name_Text = findViewById(R.id.name);
                 name_Text.setText(name);
 
-                String time= obj.getString("time");
+                String time = obj.getString("time");
                 TextView time_Text = findViewById(R.id.time);
                 time_Text.setText(time);
 
-                String km= obj.getString("km");
+                String km = obj.getString("km");
                 TextView km_Text = findViewById(R.id.km);
                 km_Text.setText(km);
 
@@ -504,12 +432,20 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
                 TextView id_user_Text = findViewById(R.id.id_user);
                 id_user_Text.setText(id_user);
 
+                String price = obj.getString("price");
+                TextView price_Text = findViewById(R.id.price);
+                price_Text.setText(price);
+
+                String name_user = obj.getString("name_user");
+                TextView name_user_Text = findViewById(R.id.name_user);
+                name_user_Text.setText(name_user);
+
                 String lat_market1 = getIntent().getStringExtra("lat_market");
                 double lat_market = Double.parseDouble(lat_market1);
                 String lng_market1 = getIntent().getStringExtra("lng_market");
                 double lng_market = Double.parseDouble(lng_market1);
-                double distanceToMarket = distance(Mylatitude,Mylongitude,lat_market,lng_market);
-                String distanceToMarketNew = String.format(Locale.ENGLISH, "%.3f", distanceToMarket/1000);
+                double distanceToMarket = distance(Mylatitude, Mylongitude, lat_market, lng_market);
+                String distanceToMarketNew = String.format(Locale.ENGLISH, "%.3f", distanceToMarket / 1000);
                 Log.d("distanceToMarket1", String.valueOf(distanceToMarketNew));
                 TextView kmToClient_text = findViewById(R.id.kmToClient);
                 kmToClient_text.setText(distanceToMarketNew);
@@ -520,31 +456,48 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
 
     }
 
+    private void GoToChat() {
+        Intent intent = new Intent(ShowOrderActivity.this, MessageActivity.class);
+        Bundle bundle = new Bundle();
+        TextView id_user_Text = findViewById(R.id.id_user);
+        String id_user = id_user_Text.getText().toString();
+        TextView client_name_Text = findViewById(R.id.name_user);
+        String client_name = client_name_Text.getText().toString();
 
+        final String idorder = getIntent().getStringExtra("id_item");
 
-    private String getDirectionsUrl(LatLng origin,LatLng dest){
+        bundle.putSerializable("client_id",id_user);
+        bundle.putSerializable("client_name",client_name);
+        bundle.putSerializable("id_order",idorder);
+        intent.putExtras(bundle);
+        ShowOrderActivity.this.startActivity(intent);
+    }
+
+    private String getDirectionsUrl(LatLng origin, LatLng dest) {
         // Origin of route
-        String str_origin = "origin="+origin.latitude+","+origin.longitude;
+        String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
         // Destination of route
-        String str_dest = "destination="+dest.latitude+","+dest.longitude;
+        String str_dest = "destination=" + dest.latitude + "," + dest.longitude;
         // Sensor enabled
         String sensor = "sensor=false";
         // Building the parameters to the web service
-        String parameters = str_origin+"&"+str_dest+"&"+sensor;
+        String parameters = str_origin + "&" + str_dest + "&" + sensor;
         // Output format
         String output = "json";
         // Building the url to the web service
-        String url = "https://maps.googleapis.com/maps/api/directions/"+output+"?"+parameters;
+        String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters;
         return url;
     }
 
-    /** A method to download json data from url */
+    /**
+     * A method to download json data from url
+     */
     @SuppressLint("LongLogTag")
-    private String downloadUrl(String strUrl) throws IOException{
+    private String downloadUrl(String strUrl) throws IOException {
         String data = "";
         InputStream iStream = null;
         HttpURLConnection urlConnection = null;
-        try{
+        try {
             URL url = new URL(strUrl);
             // Creating an http connection to communicate with url
             urlConnection = (HttpURLConnection) url.openConnection();
@@ -555,14 +508,14 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
             BufferedReader br = new BufferedReader(new InputStreamReader(iStream));
             StringBuffer sb = new StringBuffer();
             String line = "";
-            while( ( line = br.readLine()) != null){
+            while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
             data = sb.toString();
             br.close();
-        }catch(Exception e){
+        } catch (Exception e) {
             Log.d("Exception while downloading url", e.toString());
-        }finally{
+        } finally {
             iStream.close();
             urlConnection.disconnect();
         }
@@ -571,18 +524,18 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
 
 
     // Fetches data from url passed
-    private class DownloadTask extends AsyncTask<String, Void, String>{
+    private class DownloadTask extends AsyncTask<String, Void, String> {
 
         // Downloading data in non-ui thread
         @Override
         protected String doInBackground(String... url) {
             // For storing data from web service
             String data = "";
-            try{
+            try {
                 // Fetching the data from web service
                 data = downloadUrl(url[0]);
-            }catch(Exception e){
-                Log.d("Background Task",e.toString());
+            } catch (Exception e) {
+                Log.d("Background Task", e.toString());
             }
             return data;
         }
@@ -592,26 +545,28 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
         @Override
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            ParserTask parserTask = new ParserTask();
+            ShowOrderActivity.ParserTask parserTask = new ShowOrderActivity.ParserTask();
             // Invokes the thread for parsing the JSON data
             parserTask.execute(result);
         }
     }
 
-    /** A class to parse the Google Places in JSON format */
-    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String,String>>> >{
+    /**
+     * A class to parse the Google Places in JSON format
+     */
+    private class ParserTask extends AsyncTask<String, Integer, List<List<HashMap<String, String>>>> {
         // Parsing the data in non-ui thread
         @Override
         protected List<List<HashMap<String, String>>> doInBackground(String... jsonData) {
 
             JSONObject jObject;
             List<List<HashMap<String, String>>> routes = null;
-            try{
+            try {
                 jObject = new JSONObject(jsonData[0]);
                 DirectionsJSONParser parser = new DirectionsJSONParser();
                 // Starts parsing data
                 routes = parser.parse(jObject);
-            }catch(Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return routes;
@@ -626,12 +581,12 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
             lineOptions.color(getResources().getColor(R.color.current_lolcation));
             MarkerOptions markerOptions = new MarkerOptions();
             // Traversing through all the routes
-            for(int i=0;i<result.size();i++){
+            for (int i = 0; i < result.size(); i++) {
                 // Fetching i-th route
                 List<HashMap<String, String>> path = result.get(i);
                 // Fetching all the points in i-th route
-                for(int j=0;j<path.size();j++){
-                    HashMap<String,String> point = path.get(j);
+                for (int j = 0; j < path.size(); j++) {
+                    HashMap<String, String> point = path.get(j);
                     double lat = Double.parseDouble(point.get("lat"));
                     double lng = Double.parseDouble(point.get("lng"));
                     LatLng position = new LatLng(lat, lng);
@@ -642,7 +597,7 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
 
             }
             // Drawing polyline in the Google Map for the i-th route
-            if(points.size()!=0)mMap.addPolyline(lineOptions);//to avoid crash
+            if (points.size() != 0) mMap.addPolyline(lineOptions);//to avoid crash
         }
     }
 
@@ -668,13 +623,11 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         super.onBackPressed();
         Intent intent = new Intent(getBaseContext(), ShowMarketActivity.class);
         startActivity(intent);
         finish();
 
     }
-
 }

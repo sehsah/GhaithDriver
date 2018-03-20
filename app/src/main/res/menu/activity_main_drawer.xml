@@ -9,9 +9,6 @@
             android:id="@+id/nav_orders"
             android:title="طلباتي" />
         <item
-            android:id="@+id/nav_chat"
-            android:title="سجل المحادثات" />
-        <item
             android:id="@+id/nav_notifcation"
             android:title="الاشعارات" />
         <item

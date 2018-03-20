@@ -43,9 +43,36 @@
         <activity android:name=".acitivities.OrderSingleActivity" />
         <activity android:name=".acitivities.NotifcationActivity" />
         <activity android:name=".acitivities.ChatActivity" />
-        <activity android:name=".acitivities.MessageActivity"
-            android:windowSoftInputMode="adjustPan"
-            ></activity>
+        <activity
+            android:name=".acitivities.MessageActivity"
+            android:windowSoftInputMode="adjustPan" />
+
+        <service android:name=".Server.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".Server.FCMRegistrationService" />
+        <service
+            android:name=".Server.FCMTokenRefreshListenerService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_launcher" />
+
+        <activity android:name=".acitivities.ShowMarketActivity" />
+        <activity android:name=".acitivities.OrderShowDirectionActivity" />
+        <activity android:name=".acitivities.MySettingsActivity" />
+        <activity android:name=".acitivities.MyOrdersActivity" />
+        <activity android:name=".acitivities.ShowOrderActivity"></activity>
     </application>
 
 </manifest>

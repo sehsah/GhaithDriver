@@ -3,6 +3,8 @@ package com.mahmoudsehsah.ghaithDriver.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 import okhttp3.RequestBody;
 
 /**
@@ -39,6 +41,17 @@ public class UpdateUnformation {
     @Expose
     private String message;
 
+    @SerializedName("data")
+    @Expose
+    private List<User> data = null;
+
+
+    public List<User> getData() {
+        return data;
+    }
+    public void setData(List<User> data) {
+        this.data = data;
+    }
 
     public String getSuccess() {
         return success;
