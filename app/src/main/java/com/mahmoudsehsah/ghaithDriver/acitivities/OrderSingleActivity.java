@@ -49,6 +49,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.mahmoudsehsah.ghaithDriver.R;
@@ -202,8 +203,12 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
         Log.d("mapt info",lat_user+"-"+lng_user+"-"+lat_market+"-"+lng_market);
 
         String description_val = getIntent().getStringExtra("description_val");
-        Log.d("description_val",description_val);
+        Log.e("description_val",description_val);
 
+        String image_order_val =  getIntent().getStringExtra(" image_order_val");
+        if(image_order_val != null){
+            Log.e("image_order_val",image_order_val);
+        }
 
         LatLng me = new LatLng(Mylatitude, Mylongitude);
         LatLng client = new LatLng(lat_user, lng_user);
@@ -215,6 +220,7 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
         String url2 = getDirectionsUrl(market, client);
         DownloadTask downloadTask2 = new DownloadTask();
         downloadTask2.execute(url2);
+
     }
 
     private void AcceptedOrder() {
@@ -235,23 +241,38 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
         String id_user_val = id_user.getText().toString();
         String time_val = time.getText().toString();
         String description_val = getIntent().getStringExtra("description_val");
+        String image_order_val =  getIntent().getStringExtra(" image_order_val");
         Log.d("description_val",description_val);
         Log.d("time_val",time_val);
+        Log.d("price_driver_value",price_driver_value);
+        if(image_order_val != null){
+            Log.e("image_order_val",image_order_val);
+        }
         if (price_driver_value.matches("")){
             Toast.makeText(OrderSingleActivity.this,"يجب ادخال السعر اولا",Toast.LENGTH_SHORT).show();
         }else{
             final AlertDialog dialog = new SpotsDialog(OrderSingleActivity.this,"من فضلك انتظر");
             dialog.show();
             APIRequests APIRequests = ApiClient.getClient().create(APIRequests.class);
-            Call<AddNewOffer> call = APIRequests.AddNewOffer(id_user_val,uid,photo_driver,name_driver,text, price_driver_value,time_val,description_val, id_order);
+            Call<AddNewOffer> call = APIRequests.AddNewOffer(id_user_val,uid,photo_driver,name_driver,text, price_driver_value,time_val,description_val,image_order_val, id_order);
             call.enqueue(new Callback<AddNewOffer>() {
                 @Override
-                public void onResponse(Call<AddNewOffer> call, Response<AddNewOffer> response) {
-                    Toast.makeText(OrderSingleActivity.this,"تم ارسال العرض بنجاح",Toast.LENGTH_SHORT).show();
-                    dialog.dismiss();
-                    Intent intent = new Intent(getBaseContext(), ShowMarketActivity.class);
-                    SendNotiToClient();
-                    startActivity(intent);
+                public void onResponse(Call<AddNewOffer> call, retrofit2.Response<AddNewOffer> response) {
+
+                   if(response.body().getSuccess().equalsIgnoreCase("1")){
+                        Toast.makeText(OrderSingleActivity.this,"تم ارسال العرض بنجاح",Toast.LENGTH_SHORT).show();
+                        dialog.dismiss();
+                        Intent intent = new Intent(getBaseContext(), ShowMarketActivity.class);
+                        SendNotiToClient();
+                        startActivity(intent);
+                    }else{
+                       Toast.makeText(OrderSingleActivity.this,"عفوا انت قدمت عرض من قبل",Toast.LENGTH_SHORT).show();
+                       dialog.dismiss();
+                       Intent intent = new Intent(getBaseContext(), ShowMarketActivity.class);
+                       startActivity(intent);
+                    }
+
+
                 }
 
                 @Override
@@ -319,17 +340,26 @@ public class OrderSingleActivity extends AppCompatActivity  implements OnMapRead
         mMap.getUiSettings().setZoomControlsEnabled(false);
 
 
+//        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//        builder.include(me);
+//        builder.include(market);
+//        builder.include(client);
+//        LatLngBounds bounds = builder.build();
+//        int width = getResources().getDisplayMetrics().widthPixels;
+//        int height = getResources().getDisplayMetrics().heightPixels;
+//        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), width, height, 10));
+//        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
+//        mMap.animateCamera(cu);
 
         LatLngBounds.Builder builder = new LatLngBounds.Builder();
         builder.include(me);
         builder.include(market);
         builder.include(client);
         LatLngBounds bounds = builder.build();
-        int width = getResources().getDisplayMetrics().widthPixels;
-        int height = getResources().getDisplayMetrics().heightPixels;
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(builder.build(), width, height, 10));
-        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, 0);
-        mMap.animateCamera(cu);
+        int padding = 20; // offset from edges of the map in pixels
+        CameraUpdate cu = CameraUpdateFactory.newLatLngBounds(bounds, padding);
+//        googleMap.animateCamera(cu);
+
     }
 
 

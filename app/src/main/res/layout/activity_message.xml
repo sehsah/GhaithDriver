@@ -29,7 +29,7 @@
                 android:textSize="16dp"
                 android:layout_gravity="right"
                 android:paddingRight="10dp"
-                android:id="@+id/toolbar_title" />
+                android:id="@+id/viewOrder" />
             <ImageView
                 android:gravity="left|center"
                 android:layout_width="24dp"
@@ -37,7 +37,7 @@
                 android:tint="@color/white"
                 android:src="@drawable/ic_place_black_24dp"/>
             <Button
-                android:id="@+id/accepted"
+                android:id="@+id/getDirection"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="left|center"
@@ -59,10 +59,12 @@
         android:layoutDirection="rtl"
         android:padding="10dp"
         android:layout_margin="10dp"
+        android:weightSum="100"
         android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="wrap_content"
+            android:layout_weight="25"
             android:layout_height="wrap_content">
             <de.hdodenhof.circleimageview.CircleImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -78,6 +80,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:orientation="vertical"
+            android:layout_weight="25"
             android:layout_marginRight="10dp"
             android:layout_height="wrap_content">
             <TextView
@@ -98,6 +101,7 @@
             android:textColor="@color/white"
             android:layout_marginRight="20dp"
             android:layout_marginLeft="20dp"
+            android:layout_weight="25"
             android:layout_height="wrap_content">
             <RatingBar
                 android:layout_width="wrap_content"
@@ -118,6 +122,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_gravity="center|left"
+            android:layout_weight="25"
             android:layout_height="wrap_content">
 
             <ImageView
@@ -153,6 +158,44 @@
         </LinearLayout>
     </ScrollView>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:padding="5dp"
+        android:background="@color/main"
+        android:visibility="gone"
+        android:textColor="@color/white"
+        android:id="@+id/text_finish"
+        android:text="غير قادر علي الرد علي هذه المحادثهلانه تم انهاء الطلب"
+        android:layout_height="wrap_content" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:visibility="gone"
+        android:id="@+id/box_send_image"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/img"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:background="#ddd"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/car3" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ارسال"
+            android:tint="@color/white"
+            android:background="@color/main"
+            android:textColor="@color/white"
+            android:id="@+id/sendButtonImage"/>
+
+    </LinearLayout>
     <include
         layout="@layout/message_area"
         android:layout_width="match_parent"

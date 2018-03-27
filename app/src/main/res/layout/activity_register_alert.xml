@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:gravity="center"
+    android:textDirection="rtl"
+    android:orientation="vertical">
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/imageView">
+        <ScrollView
+            android:layout_width="match_parent"
+            android:scrollbars="none"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="vertical"
+                android:layout_marginTop="20sp"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp" >
+
+                <LinearLayout
+                    android:id="@+id/logo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="140dp"
+                    android:padding="40dp"
+                    android:layout_alignParentTop="true"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/logo" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textDirection="rtl"
+                    android:orientation="vertical"
+                    android:layout_marginTop="20sp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:layout_gravity="center_horizontal"
+                        android:text="حسابك قيد المراجعه من قبل الادارة"
+                        />
+
+                    <Button
+                        android:id="@+id/logout"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="20dip"
+                        android:background="@drawable/btn_background"
+                        android:text="تسجيل خروج"
+                        android:textAllCaps="false"
+                        android:textColor="#fff"
+                        android:padding="35px"
+                        android:textSize="18dp" />
+
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+    </android.support.v4.widget.SwipeRefreshLayout>
+</LinearLayout>

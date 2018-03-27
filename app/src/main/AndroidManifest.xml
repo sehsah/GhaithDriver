@@ -72,7 +72,15 @@
         <activity android:name=".acitivities.OrderShowDirectionActivity" />
         <activity android:name=".acitivities.MySettingsActivity" />
         <activity android:name=".acitivities.MyOrdersActivity" />
-        <activity android:name=".acitivities.ShowOrderActivity"></activity>
+        <activity android:name=".acitivities.ShowOrderActivity" />
+        <activity android:name=".acitivities.DirectionActivity" />
+        <activity
+            android:name=".acitivities.RegisterTypeActivity"
+            android:label="@string/title_activity_register_type"
+            android:theme="@style/AppTheme" />
+        <activity android:name=".acitivities.BillActivity" />
+        <activity android:name=".acitivities.RegisterFinishActivity" />
+        <activity android:name=".acitivities.RegisterAlertActivity"></activity>
     </application>
 
 </manifest>

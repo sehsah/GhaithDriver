@@ -21,15 +21,13 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         fontPath="fonts/jf.ttf"
-        android:layout_alignParentRight="true"
-        android:textDirection="rtl"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/black">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="قبول الطلب"
+            android:text="مشاهده الطلب"
             android:textSize="16dp"
             android:textColor="@color/white"
             android:layout_gravity="right"
@@ -40,13 +38,13 @@
             android:id="@+id/chat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="right|center"
-            android:height="60dp"
+            android:gravity="left|center"
             android:padding="6dp"
             android:text="المحادثات"
             android:textColor="@color/white"
             android:background="@color/black"
             android:textStyle="bold"/>
+
     </android.support.v7.widget.Toolbar>
 
     <ScrollView

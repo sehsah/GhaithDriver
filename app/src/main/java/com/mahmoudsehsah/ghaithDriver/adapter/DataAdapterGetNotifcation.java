@@ -153,7 +153,6 @@ public class DataAdapterGetNotifcation extends RecyclerView.Adapter<DataAdapterG
             Bundle bundle = new Bundle();
             String idMarket = ((TextView) view.findViewById(R.id.id_market)).getText().toString();
             String tv_name_market = ((TextView) view.findViewById(R.id.name_market)).getText().toString();
-
             bundle.putSerializable("idMarket",idMarket);
             bundle.putSerializable("name",tv_name_market);
             Log.e("data to idMarket",idMarket);

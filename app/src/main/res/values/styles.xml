@@ -10,7 +10,6 @@
         <item name="actionBarStyle">@style/MyTheme.ActionBar.TitleTextStyle</item>
 
 
-
     </style>
 
     <style name="RatingBar" parent="Theme.AppCompat">
@@ -27,10 +26,12 @@
         <item name="android:windowIsFloating">false</item>
         <item name="android:windowAnimationStyle">@style/MaterialDialogSheetAnimation</item>
     </style>
+
     <style name="MaterialDialogSheetAnimation">
         <item name="android:windowEnterAnimation">@anim/pop_show</item>
         <item name="android:windowExitAnimation">@anim/pop_hide</item>
     </style>
+
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
 
     </style>
@@ -58,6 +59,7 @@
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
     <style name="spinner_style">
         <item name="android:background">@drawable/background_spinner</item>
         <item name="android:paddingRight">10dp</item>
@@ -69,10 +71,12 @@
         <item name="android:spinnerItemStyle">@style/SpinnerItem</item>
         <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem</item>
     </style>
+
     <style name="SpinnerItem">
         <item name="android:textColor">#993399</item>
         <item name="android:background">@drawable/my_rectangle</item>
     </style>
+
     <style name="SpinnerDropDownItem">
         <item name="android:textColor">#993399</item>
         <item name="android:background">@drawable/my_rectangle</item>

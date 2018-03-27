@@ -156,9 +156,7 @@ public class LoginActivity extends ActivityManagePermission {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public void login() {
 
-        //final ProgressDialog loading = ProgressDialog.show(this,"جاري تحميل البيانات","من فضلك انتظر",false,false);
         final ProgressDialog dialog = new ProgressDialog(this);
-//        dialog.create();
         SpannableString ss=  new SpannableString("جاري  تسجيل الدخول");
         Typeface typeFace = Typeface.createFromAsset(getAssets(), "font/jf.ttf");
         ss.setSpan(new RelativeSizeSpan(1.0f), 0, ss.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -189,16 +187,25 @@ public class LoginActivity extends ActivityManagePermission {
                     String avatar = userDetails.getDriverPhoto();
                     String mobile = userDetails.getDriverTelephone();
                     String type = userDetails.getType();
+                    int active = Integer.parseInt(userDetails.getActive());
                     Log.d("Login type",type);
                     Log.d("user_id",user_id);
-                    sessionManager.createLoginSession(name, email, user_id, avatar, mobile ,type);
-                    Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                    if(type.equals("driver")){
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                    }else {
-                        startActivity(new Intent(LoginActivity.this, ShowMarketActivity.class));
+                    Log.d("active", String.valueOf(active));
+                    if(active == 0){
+                        startActivity(new Intent(LoginActivity.this, RegisterAlertActivity.class));
 
+                    }else{
+                        sessionManager.createLoginSession(name, email, user_id, avatar, mobile ,type);
+                        Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                        if(type.equals("driver")){
+                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                        }else {
+                            startActivity(new Intent(LoginActivity.this, ShowMarketActivity.class));
+
+                        }
                     }
+
+
                 }else if(response.body().getSuccess().equalsIgnoreCase("0")){
                     Toast.makeText(LoginActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
                     Log.d("getMessage", response.body().getMessage());

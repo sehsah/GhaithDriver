@@ -72,7 +72,7 @@ public class DataAdapterGetOrders extends RecyclerView.Adapter<DataAdapterGetOrd
         viewHolder.lng_user.setText(android.get(i).getLng());
         viewHolder.lat_market.setText(android.get(i).getLat_market());
         viewHolder.lng_market.setText(android.get(i).getLng_market());
-
+        viewHolder.image_order.setText(android.get(i).getImages());
 
         int id = Integer.parseInt(android.get(i).getIdUser());
         String url = "http://yaqeensa.com/android/ghaith/GetClientInformation?id="+id;
@@ -120,7 +120,7 @@ public class DataAdapterGetOrders extends RecyclerView.Adapter<DataAdapterGetOrd
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         Typeface customTypeOne = Typeface.createFromAsset(itemView.getContext().getAssets(), "font/jf.ttf");
-        private TextView name,id,description,dist,time,lat_user,lng_user,lat_market,lng_market;
+        private TextView name,id,description,dist,time,lat_user,lng_user,lat_market,lng_market, image_order;
         private ImageView profile;
         public ViewHolder(View view) {
             super(view);
@@ -135,6 +135,7 @@ public class DataAdapterGetOrders extends RecyclerView.Adapter<DataAdapterGetOrd
             lng_user = view.findViewById(R.id.lng_user);
             lat_market = view.findViewById(R.id.lat_market);
             lng_market = view.findViewById(R.id.lng_market);
+            image_order = view.findViewById(R.id.image_order);
 
             name.setTypeface(customTypeOne);
             description.setTypeface(customTypeOne);
@@ -155,6 +156,7 @@ public class DataAdapterGetOrders extends RecyclerView.Adapter<DataAdapterGetOrd
             String tv_lat_market_pass = ((TextView) view.findViewById(R.id.lat_market)).getText().toString();
             String tv_lng_market_pass = ((TextView) view.findViewById(R.id.lng_market)).getText().toString();
             String tv_description_val = ((TextView) view.findViewById(R.id.description)).getText().toString();
+            String tv_image_order_val = ((TextView) view.findViewById(R.id.image_order)).getText().toString();
 
             bundle.putSerializable("id_item",tv_id_pass);
             bundle.putSerializable("lat_user",tv_lat_user_pass);
@@ -162,6 +164,8 @@ public class DataAdapterGetOrders extends RecyclerView.Adapter<DataAdapterGetOrd
             bundle.putSerializable("lat_market",tv_lat_market_pass);
             bundle.putSerializable("lng_market",tv_lng_market_pass);
             bundle.putSerializable("description_val",tv_description_val);
+            bundle.putSerializable("image_order_val",tv_image_order_val);
+            Log.e("tv_image_order_val",tv_image_order_val);
             intent.putExtras(bundle);
             context.startActivity(intent);
         }

@@ -1,11 +1,14 @@
 package com.mahmoudsehsah.ghaithDriver.adapter;
 
 import com.mahmoudsehsah.ghaithDriver.models.AddNewOffer;
+import com.mahmoudsehsah.ghaithDriver.models.FinishOrder;
+import com.mahmoudsehsah.ghaithDriver.models.FinishRegister;
 import com.mahmoudsehsah.ghaithDriver.models.Login;
 import com.mahmoudsehsah.ghaithDriver.models.Register;
 import com.mahmoudsehsah.ghaithDriver.models.RegisterNewMarket;
 import com.mahmoudsehsah.ghaithDriver.models.SendMessage;
 import com.mahmoudsehsah.ghaithDriver.models.SendNotiFirbaseClient;
+import com.mahmoudsehsah.ghaithDriver.models.UpdateBill;
 import com.mahmoudsehsah.ghaithDriver.models.UpdateToken;
 import com.mahmoudsehsah.ghaithDriver.models.UpdateUnformation;
 import com.mahmoudsehsah.ghaithDriver.models.updateLocation;
@@ -31,12 +34,19 @@ public interface APIRequests {
     @Multipart
     @POST("android/ghaith/processRegistrationDriver")
     Call<Register> register(
-            @Part("id_number") String id_number,
-            @Part MultipartBody.Part atteched1,
-            @Part MultipartBody.Part atteched2,
+            @Part("type") String type,
             @Part("driver_telephone") String driver_telephone,
             @Part("driver_password") String driver_password,
             @Part("driver_username") String driver_username);
+
+    @Multipart
+    @POST("android/ghaith/FinishRegister")
+    Call<FinishRegister> FinishRegister(
+            @Part("driver_id") String driver_id,
+            @Part MultipartBody.Part file,
+            @Part MultipartBody.Part file2,
+            @Part MultipartBody.Part file3,
+            @Part MultipartBody.Part fil4);
 
     @FormUrlEncoded
     @POST("android/ghaith/processLoginDriver")
@@ -94,6 +104,7 @@ public interface APIRequests {
             @Field("price") String price,
             @Field("time") String time,
             @Field("description") String description,
+            @Field("image_order") String image_order,
             @Field("id_order") String id_order
     );
 
@@ -112,7 +123,29 @@ public interface APIRequests {
             @Field("message") String message,
             @Field("client_id") String client_id,
             @Field("driver_id") String driver_id,
-            @Field("send") String send
+            @Field("send") String send,
+            @Field("id_order") String id_order,
+            @Field("type") String type
+    );
+
+    @Multipart
+    @POST("android/ghaith/SendMessagePhoto")
+    Call<SendMessage> SendMessagePhoto(
+            @Part MultipartBody.Part images,
+            @Part("client_id") String client_id,
+            @Part("driver_id") String driver_id,
+            @Part("send") String send,
+            @Part("id_order") String id_order,
+            @Part("type") String type
+    );
+
+    @FormUrlEncoded
+    @POST("android/ghaith/UpdateBill")
+    Call<UpdateBill> UpdateBill(
+            @Field("price2") String price2,
+            @Field("id_order") String id_order
+
+
     );
 
     @FormUrlEncoded
@@ -129,6 +162,9 @@ public interface APIRequests {
             @Field("id_driver") String id_driver,
             @Field("id_market") String id_market
     );
+
+    @GET("android/ghaith/FinishOrder")
+    Call<FinishOrder> FinishOrder(@Query("id_order") String id_order);
 }
 
 

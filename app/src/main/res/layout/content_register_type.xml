@@ -28,7 +28,7 @@
                 <LinearLayout
                     android:id="@+id/logo"
                     android:layout_width="wrap_content"
-                    android:layout_height="120dp"
+                    android:layout_height="140dp"
                     android:padding="40dp"
                     android:layout_alignParentTop="true"
                     android:gravity="center">
@@ -80,74 +80,6 @@
                         android:background="@drawable/rounded_edittext"
                         />
 
-                    <EditText
-                        android:id="@+id/password"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:hint="كلمة المرور"
-                        android:background="@drawable/rounded_edittext"
-                        android:inputType="textPassword"
-                        android:padding="15dp"
-                        android:singleLine="true"
-                        android:textColor="#fff"
-                        android:textColorHint="#fff"
-                        android:textAlignment="center"
-                        />
-
-                    <EditText
-                        android:id="@+id/password2"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="10dp"
-                        android:hint="كلمة المرور"
-                        android:background="@drawable/rounded_edittext"
-                        android:inputType="textPassword"
-                        android:padding="15dp"
-                        android:singleLine="true"
-                        android:textColor="#fff"
-                        android:textColorHint="#fff"
-                        android:textAlignment="center" />
-
-
-                    <!--<EditText-->
-                        <!--android:id="@+id/id_number"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_marginBottom="10dp"-->
-                        <!--android:hint=" رقم الهويه"-->
-                        <!--android:background="@drawable/rounded_edittext"-->
-                        <!--android:padding="15dp"-->
-                        <!--android:singleLine="true"-->
-                        <!--android:inputType="number"-->
-                        <!--android:textColor="#fff"-->
-                        <!--android:textColorHint="#fff"-->
-                        <!--android:textAlignment="center" />-->
-
-
-                    <!--<Button-->
-                        <!--android:id="@+id/img1"-->
-                        <!--android:layout_width="fill_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:background="@drawable/rounded_edittext"-->
-                        <!--android:text=" صوره الهويه "-->
-                        <!--android:textAllCaps="false"-->
-                        <!--android:textColor="#fff"-->
-                        <!--android:padding="15dp"-->
-                        <!--android:layout_marginTop="10dp"-->
-                        <!--android:textSize="18dp" />-->
-
-                    <!--<Button-->
-                        <!--android:id="@+id/img2"-->
-                        <!--android:layout_marginTop="10dp"-->
-                        <!--android:layout_width="fill_parent"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:background="@drawable/rounded_edittext"-->
-                        <!--android:text=" صوره الرخصه "-->
-                        <!--android:textAllCaps="false"-->
-                        <!--android:textColor="#fff"-->
-                        <!--android:padding="15dp"-->
-                        <!--android:textSize="18dp" />-->
 
                     <Button
                         android:id="@+id/sign_up"
@@ -155,7 +87,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dip"
                         android:background="@drawable/btn_background"
-                        android:text="التالي "
+                        android:text="تسجيل "
                         android:textAllCaps="false"
                         android:textColor="#fff"
                         android:padding="35px"
@@ -166,6 +98,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-    </ScrollView>
+        </ScrollView>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

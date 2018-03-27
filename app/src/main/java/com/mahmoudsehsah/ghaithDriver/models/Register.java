@@ -3,6 +3,8 @@ package com.mahmoudsehsah.ghaithDriver.models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 /**
  * Created by mahmoud on 2/20/2018.
  */
@@ -28,6 +30,24 @@ public class Register {
     @SerializedName("customers_username")
     @Expose
     private String customers_username;
+
+    @SerializedName("type")
+    @Expose
+    private String type;
+
+    @SerializedName("data")
+    @Expose
+    private List<User> data = null;
+
+
+    public List<User> getData() {
+        return data;
+    }
+
+    public void setData(List<User> data) {
+        this.data = data;
+    }
+
 
     public String getSuccess() {
         return success;
@@ -66,6 +86,14 @@ public class Register {
     }
     public void setCustomers_username(String customers_username) {
         this.customers_username = customers_username;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
 }

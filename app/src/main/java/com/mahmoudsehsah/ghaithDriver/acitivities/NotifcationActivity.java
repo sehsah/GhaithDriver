@@ -111,7 +111,7 @@ public class NotifcationActivity extends AppCompatActivity {
     public void onBackPressed()
     {
         super.onBackPressed();
-        startActivity(new Intent(NotifcationActivity.this, MainActivity.class));
+        startActivity(new Intent(NotifcationActivity.this, ShowMarketActivity.class));
         finish();
 
     }

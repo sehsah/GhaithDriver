@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
@@ -28,6 +29,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mahmoudsehsah.ghaithDriver.R;
@@ -63,6 +65,7 @@ public class ShowMarketActivity extends AppCompatActivity implements  Navigation
     int d;
     private float distance ,distance2;
     double latitude,longitude;
+    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -256,7 +259,21 @@ public class ShowMarketActivity extends AppCompatActivity implements  Navigation
     @Override
     public void onBackPressed()
     {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
 
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "اضفط مره اخري لغلق البرنامج", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
 
     }
 
