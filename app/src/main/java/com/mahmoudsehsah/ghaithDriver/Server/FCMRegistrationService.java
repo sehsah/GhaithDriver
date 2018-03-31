@@ -72,7 +72,7 @@ public class FCMRegistrationService extends IntentService {
         call.enqueue(new Callback<UpdateToken>() {
             @Override
             public void onResponse(Call<UpdateToken> call, retrofit2.Response<UpdateToken> response) {
-                Log.d("sucsess Update token", "suceess");
+                Log.d("success Update token", "success");
             }
 
             @Override

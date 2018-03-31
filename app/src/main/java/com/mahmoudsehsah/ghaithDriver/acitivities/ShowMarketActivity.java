@@ -33,6 +33,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mahmoudsehsah.ghaithDriver.R;
+import com.mahmoudsehsah.ghaithDriver.Server.FCMRegistrationService;
 import com.mahmoudsehsah.ghaithDriver.custom.CustomListViewAdapter;
 import com.mahmoudsehsah.ghaithDriver.custom.CustomTypefaceSpan;
 import com.mahmoudsehsah.ghaithDriver.custom.GPSTracker;
@@ -76,6 +77,7 @@ public class ShowMarketActivity extends AppCompatActivity implements  Navigation
         Calligrapher calligrapher = new Calligrapher(this);
         calligrapher.setFont(this, "font/jf.ttf", true);
 
+        startService(new Intent(this,FCMRegistrationService.class));
 
 
         //toolbar

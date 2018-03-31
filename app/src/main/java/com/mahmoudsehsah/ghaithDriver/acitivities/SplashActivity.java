@@ -1,13 +1,17 @@
 package com.mahmoudsehsah.ghaithDriver.acitivities;
 
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -16,6 +20,9 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.mahmoudsehsah.ghaithDriver.R;
 import com.mahmoudsehsah.ghaithDriver.Server.FCMRegistrationService;
 import com.mahmoudsehsah.ghaithDriver.session.SessionManager;
+import com.thebrownarrow.permissionhelper.ActivityManagePermission;
+import com.thebrownarrow.permissionhelper.PermissionResult;
+import com.thebrownarrow.permissionhelper.PermissionUtils;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -24,7 +31,9 @@ import java.util.Locale;
  * Created by android on 7/3/17.
  */
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends ActivityManagePermission {
+    String permissionAsk[] = {PermissionUtils.Manifest_CAMERA, PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, PermissionUtils.Manifest_READ_EXTERNAL_STORAGE, PermissionUtils.Manifest_ACCESS_FINE_LOCATION, PermissionUtils.Manifest_ACCESS_COARSE_LOCATION};
+
 
 
     @Override
@@ -33,7 +42,6 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.splash_activity);
         int SPLASH_TIME_OUT = 1000;
         changement();
-        startService(new Intent(this,FCMRegistrationService.class));
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             Configuration configuration = getResources().getConfiguration();
@@ -41,6 +49,37 @@ public class SplashActivity extends AppCompatActivity {
             getResources().updateConfiguration(configuration, getResources().getDisplayMetrics());
         }
 
+        new Handler().postDelayed(new Runnable() {
+
+            /*
+             * Showing splash screen with a timer. This will be useful when you
+             * want to show case your app logo / company
+             */
+
+            @Override
+            public void run() {
+                // This method will be executed once the timer is over
+                // Start your app main activity
+
+                askCompactPermissions(permissionAsk, new PermissionResult() {
+                    @Override
+                    public void permissionGranted() {
+                        changement();
+                    }
+
+                    @Override
+                    public void permissionDenied() {
+                        changement();
+                    }
+
+                    @Override
+                    public void permissionForeverDenied() {
+                        changement();
+                    }
+                });
+
+            }
+        }, SPLASH_TIME_OUT);
     }
     public void changement() {
         SessionManager sessionManager = new SessionManager(getApplicationContext());
@@ -49,13 +88,7 @@ public class SplashActivity extends AppCompatActivity {
             sessionManager = new SessionManager(SplashActivity.this);
             HashMap<String, String> user = sessionManager.getUserDetails();
             String type = user.get(SessionManager.TYPE);
-//             Log.d("type",type);
-//            if(type.equals("driver")){
-//                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
-//            }else {
-//                startActivity(new Intent(SplashActivity.this, OrdersActivity.class));
-//
-//            }
+
            startActivity(new Intent(SplashActivity.this, ShowMarketActivity.class));
         } else {
             Intent i = new Intent(SplashActivity.this, MainActivity.class);
@@ -63,6 +96,13 @@ public class SplashActivity extends AppCompatActivity {
         }
         finish();
         isGooglePlayServicesAvailable(SplashActivity.this);
+
+        if (ActivityCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+            return;
+        }else{
+            // Write you code here if permission already given.
+        }
 
     }
 

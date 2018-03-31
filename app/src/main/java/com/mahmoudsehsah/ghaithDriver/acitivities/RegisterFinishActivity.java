@@ -20,6 +20,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.mahmoudsehsah.ghaithDriver.R;
@@ -58,6 +59,12 @@ public class RegisterFinishActivity extends AppCompatActivity {
         img3 = findViewById(R.id.img3);
         img4 = findViewById(R.id.img4);
 
+
+        RelativeLayout up4 = findViewById(R.id.up4);
+        RelativeLayout up1 = findViewById(R.id.up1);
+        RelativeLayout up2 = findViewById(R.id.up2);
+        RelativeLayout up3 = findViewById(R.id.up3);
+
         upload =  findViewById(R.id.upload);
         upload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,6 +93,21 @@ public class RegisterFinishActivity extends AppCompatActivity {
                 chooseImage4();
             }
         });
+
+        final String type = getIntent().getStringExtra("type");
+        Log.e("type",type);
+        if(type.equals("delivery")){
+            up1.setVisibility(View.GONE);
+            up2.setVisibility(View.GONE);
+            up3.setVisibility(View.GONE);
+
+//            RelativeLayout.LayoutParams layout_description = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.FILL_PARENT,
+//                    RelativeLayout.LayoutParams.FILL_PARENT);
+//            up4.setLayoutParams(layout_description);
+
+            
+
+        }
 
         Button sign_up = findViewById(R.id.sign_up);
         sign_up.setOnClickListener(new View.OnClickListener() {

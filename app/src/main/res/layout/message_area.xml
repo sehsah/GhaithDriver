@@ -1,42 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_chat"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom"
-    android:padding="5dp"
-    android:id="@+id/message_area"
-    android:background="@color/main"
-    android:orientation="horizontal">
+    android:orientation="vertical"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.mahmoudsehsah.ghaithDriver.acitivities.MessageActivity"
+    tools:showIn="@layout/activity_message">
 
-    <Button
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="4"
-        android:padding="4dp"
-        android:text="ارسال"
-        android:tint="@color/white"
-        android:background="@color/main"
-        android:textColor="@color/white"
-        android:id="@+id/sendButton"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="4dp"
         android:layout_weight="1"
-        android:textColorHint="#777"
-        android:textColor="#777"
-        android:hint="اكتب رساله جديدة"
-        android:textSize="14dp"
-        android:id="@+id/messageArea"
-        android:padding="5dp"
-        android:maxHeight="80dp"
-        android:background="@color/white"
-        />
+        android:paddingBottom="2dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:background="@color/main"
+                android:id="@+id/message_area"
+                android:layout_height="wrap_content">
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:padding="4dp"
+                    android:text="ارسال"
+                    android:tint="@color/white"
+                    android:background="@color/main"
+                    android:textColor="@color/white"
+                    android:id="@+id/sendButton"/>
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textColorHint="#777"
+                    android:textColor="#777"
+                    android:hint="اكتب رساله جديدة"
+                    android:textSize="14dp"
+                    android:id="@+id/messageArea"
+                    android:padding="5dp"
+                    android:maxHeight="80dp"
+                    android:background="@color/white"
+                    />
 
-    <ImageView
-        android:id="@+id/img_attachment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:tint="@color/white"
-        android:src="@drawable/ic_more_vert" />
+                <ImageView
+                    android:id="@+id/img_attachment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:tint="@color/white"
+                    android:src="@drawable/ic_more_vert" />
+            </LinearLayout>
+
 </LinearLayout>

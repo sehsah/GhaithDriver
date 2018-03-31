@@ -56,6 +56,7 @@ dependencies {
     compile 'com.loopj.android:android-async-http:1.4.9'
     compile 'com.onesignal:OneSignal:3.8.2@aar'
 
+    compile 'com.jakewharton:butterknife:8.4.0'
 
 
     implementation 'com.android.support:cardview-v7:26.1.0'

@@ -1,12 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="#ffffff"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="@color/white"
+    tools:context="com.mahmoudsehsah.ghaithDriver.acitivities.MessageActivity">
+
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -52,6 +55,7 @@
         </android.support.v7.widget.Toolbar>
 
     </android.support.design.widget.AppBarLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -135,28 +139,6 @@
                 android:tint="@color/green" />
         </LinearLayout>
     </LinearLayout>
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_weight="20"
-        android:layout_height="wrap_content">
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:scrollbars="vertical"
-            android:orientation="vertical"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.RecyclerView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="none"
-                android:transcriptMode="alwaysScroll"
-                android:id="@+id/recycler_view">
-            </android.support.v7.widget.RecyclerView>
-
-        </LinearLayout>
-    </ScrollView>
 
     <TextView
         android:layout_width="match_parent"
@@ -167,7 +149,7 @@
         android:visibility="gone"
         android:textColor="@color/white"
         android:id="@+id/text_finish"
-        android:text="غير قادر علي الرد علي هذه المحادثهلانه تم انهاء الطلب"
+        android:text="غير قادر علي الرد علي هذه المحادثه لانه تم انهاء الطلب"
         android:layout_height="wrap_content" />
 
     <LinearLayout
@@ -196,11 +178,10 @@
             android:id="@+id/sendButtonImage"/>
 
     </LinearLayout>
-    <include
-        layout="@layout/message_area"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="bottom"
-        android:layout_weight="1" />
+
+    <include layout="@layout/message_area" />
+
 
 </LinearLayout>
+
+

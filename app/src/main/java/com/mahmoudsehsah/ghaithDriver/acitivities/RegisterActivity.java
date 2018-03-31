@@ -217,10 +217,11 @@ public class RegisterActivity extends ActivityManagePermission implements Google
                     Log.d("getMessage", response.body().getMessage());
                     User userDetails = response.body().getData().get(0);
                     String user_id = userDetails.getDriverId();
-                    Log.e("user_id",user_id);
+                    String type  = userDetails.getType();
                     Intent intent = new Intent(RegisterActivity.this, RegisterFinishActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("user_id",user_id);
+                    bundle.putSerializable("type",type);
                     intent.putExtras(bundle);
                     startActivity(intent);
 

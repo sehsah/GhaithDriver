@@ -3,9 +3,12 @@ package com.mahmoudsehsah.ghaithDriver.acitivities;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -46,9 +49,11 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.mahmoudsehsah.ghaithDriver.R;
 import com.mahmoudsehsah.ghaithDriver.Server.ApiClient;
+import com.mahmoudsehsah.ghaithDriver.Server.WebService;
 import com.mahmoudsehsah.ghaithDriver.adapter.APIRequests;
 import com.mahmoudsehsah.ghaithDriver.adapter.DataAdapterGetMessage;
 import com.mahmoudsehsah.ghaithDriver.adapter.JSONResponseGetMasseges;
+import com.mahmoudsehsah.ghaithDriver.adapter.MessagingAdapter;
 import com.mahmoudsehsah.ghaithDriver.custom.CustomTypefaceSpan;
 import com.mahmoudsehsah.ghaithDriver.models.ChatList;
 import com.mahmoudsehsah.ghaithDriver.models.FinishOrder;
@@ -63,6 +68,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import me.anwarshahriar.calligrapher.Calligrapher;
 import okhttp3.MediaType;
@@ -70,6 +76,7 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MessageActivity extends AppCompatActivity {
 
@@ -81,11 +88,42 @@ public class MessageActivity extends AppCompatActivity {
     private Toolbar mTopToolbar;
     TextView driver_name_text,drivername,pricc;
     ImageView driver_photo;
-    private ArrayList<ChatList> data;
-    private DataAdapterGetMessage adapter;
-    private RecyclerView recyclerView;
+
+//    private ArrayList<ChatList> data;
+//    private DataAdapterGetMessage adapter;
+//    private RecyclerView recyclerView;
+
     String imagePath;
     ImageView img;
+
+    private MessagingAdapter adapter;
+    private List<ChatList> messages;
+    RecyclerView recyclerChat;
+
+
+
+
+    private BroadcastReceiver messageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // get message sent from broadcast
+            ChatList message = intent.getParcelableExtra("message");
+            // check if message is null
+            if (message != null) {
+                // add message to messages list
+                messages.add(message);
+                // notify adapter that new message inserted to list in the last position (list size-1)
+                adapter.notifyItemInserted(messages.size() - 1);
+                // scroll to bottom of recycler show last message
+                recyclerChat.scrollToPosition(messages.size() - 1);
+                recyclerChat.getLayoutManager().scrollToPosition(messages.size() - 1);
+
+                Log.e("hiiiiiiiiiiiiiiiiiiiii","new message");
+            }
+
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +139,7 @@ public class MessageActivity extends AppCompatActivity {
         // change font
         Calligrapher calligrapher = new Calligrapher(this);
         calligrapher.setFont(this, "font/jf.ttf", true);
+
 
         String driver_name = getIntent().getStringExtra("client_name");
         String price = getIntent().getStringExtra("price");
@@ -121,7 +160,8 @@ public class MessageActivity extends AppCompatActivity {
         stars.getDrawable(0).setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(1).setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 
-        String id = getIntent().getStringExtra("client_id");
+        final String id = getIntent().getStringExtra("client_id");
+        Log.e("client id",id);
         String url = "http://yaqeensa.com/android/ghaith/GetClientInformation?id="+id;
         Log.d("url",url);
         RequestQueue requestQueue= Volley.newRequestQueue(MessageActivity.this);
@@ -160,7 +200,7 @@ public class MessageActivity extends AppCompatActivity {
 
 
         String id_order = getIntent().getStringExtra("id_order");
-        Log.d("id_order",id_order);
+//        Log.d("id_order",id_order);
         String url2 = "http://yaqeensa.com/android/ghaith/ShowOrderInfo?id="+id_order;
         RequestQueue requestQueue2= Volley.newRequestQueue(getApplicationContext());
         StringRequest stringRequest2=new StringRequest(Request.Method.GET, url2, new com.android.volley.Response.Listener<String>() {
@@ -208,12 +248,31 @@ public class MessageActivity extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String messageText = messageArea.getText().toString();
 
-                if(!messageText.equals("")){
-                    SendNewMessagr();
-                    messageArea.setText("");
-                }
+                SessionManager sessionManager = new SessionManager(MessageActivity.this);
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String driver_id  = user.get(SessionManager.USER_ID);
+                 String client_id = getIntent().getStringExtra("client_id");
+
+
+                if (messageArea.getText().toString().isEmpty()) return;
+
+                // get msg from edit text
+                String msg = messageArea.getText().toString();
+                // create new message
+                ChatList message = new ChatList();
+                message.setType("1");
+                message.setDriverId(driver_id);
+                message.setClientId(client_id);
+                message.setSend(Integer.parseInt(driver_id));
+                message.setMessage(msg);
+                messages.add(message);
+                adapter.notifyItemInserted(messages.size() - 1);
+                recyclerChat.scrollToPosition(messages.size() - 1);
+                recyclerChat.getLayoutManager().scrollToPosition(messages.size() - 1);
+                messageArea.setText("");
+                SendNewMessag(msg);
+
             }
         });
 
@@ -221,7 +280,7 @@ public class MessageActivity extends AppCompatActivity {
         bottomSheetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openBottomSheet();
+              openBottomSheet();
             }
         });
 
@@ -286,10 +345,29 @@ public class MessageActivity extends AppCompatActivity {
             }
         });
 
-        Button sendButtonImage = findViewById(R.id.sendButtonImage);
+       Button sendButtonImage = findViewById(R.id.sendButtonImage);
         sendButtonImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                SessionManager sessionManager = new SessionManager(MessageActivity.this);
+                HashMap<String, String> user = sessionManager.getUserDetails();
+                String id  = user.get(SessionManager.USER_ID);
+                String client_id = getIntent().getStringExtra("client_id");
+
+                // SendNewMessagPhoto();
+                // get msg from edit text
+                String msg = messageArea.getText().toString();
+                // create new message
+                ChatList message = new ChatList();
+                message.setType("2");
+                message.setDriverId(id);
+                message.setClientId(client_id);
+                message.setSend(Integer.parseInt(client_id));
+                message.setMessage(msg);
+                messages.add(message);
+                adapter.notifyItemInserted(messages.size() - 1);
+                recyclerChat.scrollToPosition(messages.size() - 1);
                 SendNewMessagPhoto();
 
             }
@@ -407,9 +485,6 @@ public class MessageActivity extends AppCompatActivity {
         call.enqueue(new Callback<SendMessage>() {
             @Override
             public void onResponse(Call<SendMessage> call, retrofit2.Response<SendMessage> response) {
-                finish();
-                startActivity(getIntent());
-                recyclerView.scrollToPosition(data.size() - 1);
 
             }
 
@@ -422,23 +497,19 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
-    private void SendNewMessagr() {
+    private void SendNewMessag(String msg) {
 
         SessionManager sessionManager = new SessionManager(MessageActivity.this);
         HashMap<String, String> user = sessionManager.getUserDetails();
         String driver_id  = user.get(SessionManager.USER_ID);
         String client_id = getIntent().getStringExtra("client_id");
-        String message = messageArea.getText().toString();
         String id_order = getIntent().getStringExtra("id_order");
         String type = "1";
         APIRequests APIRequests = ApiClient.getClient().create(APIRequests.class);
-        Call<SendMessage> call = APIRequests.SendMessagee(message, client_id,driver_id,driver_id,id_order,type);
+        Call<SendMessage> call = APIRequests.SendMessagee(msg, client_id,driver_id,driver_id,id_order,type);
         call.enqueue(new Callback<SendMessage>() {
             @Override
             public void onResponse(Call<SendMessage> call, retrofit2.Response<SendMessage> response) {
-                finish();
-                startActivity(getIntent());
-                recyclerView.scrollToPosition(data.size() - 1);
 
             }
 
@@ -465,7 +536,6 @@ public class MessageActivity extends AppCompatActivity {
             message_area.setVisibility(View.GONE);
             LinearLayout box_send_image = findViewById(R.id.box_send_image);
             box_send_image.setVisibility(View.VISIBLE);
-            //mBottomSheetDialog.show();
 
         }
 
@@ -483,23 +553,14 @@ public class MessageActivity extends AppCompatActivity {
     }
 
     private void initViews(){
-        recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-        recyclerView.setLayoutManager(layoutManager);
+        recyclerChat = findViewById(R.id.recycler_view);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerChat.setLayoutManager(layoutManager);
         loadJSON();
     }
 
     private void loadJSON() {
 
-        final ProgressDialog dialog = new ProgressDialog(this);
-        SpannableString ss=  new SpannableString("");
-        Typeface typeFace = Typeface.createFromAsset(getAssets(), "font/jf.ttf");
-        ss.setSpan(new RelativeSizeSpan(1.0f), 0, ss.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        ss.setSpan(new CustomTypefaceSpan("", typeFace), 0, ss.length(), 0);
-        dialog.setMessage(ss);
-        dialog.show();
-        ///////////////////////////
         SessionManager sessionManager = new SessionManager(MessageActivity.this);
         HashMap<String, String> user = sessionManager.getUserDetails();
         String uid = user.get(SessionManager.USER_ID);
@@ -508,21 +569,25 @@ public class MessageActivity extends AppCompatActivity {
         Log.d("id_order",id_order);
         Log.d("client_id",client_id);
         Log.d("id_driver",uid);
-        APIRequests APIRequests = ApiClient.getClient().create(APIRequests.class);
-        Call<JSONResponseGetMasseges> call = APIRequests.getJSONMasseges(client_id,uid,id_order);
-        call.enqueue(new Callback<JSONResponseGetMasseges>() {
+
+        WebService.getInstance().getApi().getMessages(client_id,uid,id_order).enqueue(new Callback<List<ChatList>>() {
             @Override
-            public void onResponse(Call<JSONResponseGetMasseges> call, retrofit2.Response<JSONResponseGetMasseges> response) {
-                dialog.dismiss();
-                JSONResponseGetMasseges JSONResponseGetMasseges = response.body();
-                data = new ArrayList<>(Arrays.asList(JSONResponseGetMasseges.getAndroid()));
-                adapter = new DataAdapterGetMessage(getApplicationContext(),data);
-                recyclerView.setAdapter(adapter);
+            public void onResponse(Call<List<ChatList>> call, Response<List<ChatList>> response) {
+                Log.e("message","get");
+                messages = response.body();
+                // create new adapter with these message
+                adapter = new MessagingAdapter(messages, MessageActivity.this);
+                // set adapter for recycler
+                recyclerChat.setAdapter(adapter);
+                // scroll to bottom of screen
+                recyclerChat.scrollToPosition(messages.size() - 1);
+//                recyclerChat.smoothScrollToPosition(messages.size() - 1);
+
+
             }
 
             @Override
-            public void onFailure(Call<JSONResponseGetMasseges> call, Throwable t) {
-                dialog.dismiss();
+            public void onFailure(Call<List<ChatList>> call, Throwable t) {
                 Log.d("Error",t.getMessage());
             }
         });
@@ -537,4 +602,17 @@ public class MessageActivity extends AppCompatActivity {
 
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(messageReceiver, new IntentFilter("UpdateChatActivity"));
+        Log.e("onResume","now");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unregisterReceiver(messageReceiver);
+    }
 }

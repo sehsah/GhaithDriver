@@ -72,7 +72,7 @@ public class NotifcationActivity extends AppCompatActivity {
         //get pass data
         final String city= getIntent().getStringExtra("category");
         final ProgressDialog dialog = new ProgressDialog(this);
-        dialog.create();
+        //dialog.create();
         SpannableString ss=  new SpannableString("جاري  جلب البيانات");
         Typeface typeFace = Typeface.createFromAsset(getAssets(), "font/jf.ttf");
         ss.setSpan(new RelativeSizeSpan(1.0f), 0, ss.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);

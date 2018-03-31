@@ -1,6 +1,7 @@
 package com.mahmoudsehsah.ghaithDriver.adapter;
 
 import com.mahmoudsehsah.ghaithDriver.models.AddNewOffer;
+import com.mahmoudsehsah.ghaithDriver.models.ChatList;
 import com.mahmoudsehsah.ghaithDriver.models.FinishOrder;
 import com.mahmoudsehsah.ghaithDriver.models.FinishRegister;
 import com.mahmoudsehsah.ghaithDriver.models.Login;
@@ -13,6 +14,8 @@ import com.mahmoudsehsah.ghaithDriver.models.UpdateToken;
 import com.mahmoudsehsah.ghaithDriver.models.UpdateUnformation;
 import com.mahmoudsehsah.ghaithDriver.models.updateLocation;
 import com.mahmoudsehsah.ghaithDriver.models.updateUserId;
+
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -117,8 +120,11 @@ public interface APIRequests {
     @GET("android/ghaith/Masseges")
     Call<JSONResponseGetMasseges> getJSONMasseges(@Query("id_user") String id_user, @Query("id_driver") String id_driver,@Query("id_order") String id_order);
 
+    @GET("android/ghaith/Masseges")
+    Call<List<ChatList>> getMessages(@Query("id_user") String id_user, @Query("id_driver") String id_driver, @Query("id_order") String id_order);
+
     @FormUrlEncoded
-    @POST("android/ghaith/SendMessage")
+    @POST("android/ghaith/SendMessageToClient")
     Call<SendMessage> SendMessagee(
             @Field("message") String message,
             @Field("client_id") String client_id,
@@ -129,7 +135,7 @@ public interface APIRequests {
     );
 
     @Multipart
-    @POST("android/ghaith/SendMessagePhoto")
+    @POST("android/ghaith/SendMessagePhotoToClient")
     Call<SendMessage> SendMessagePhoto(
             @Part MultipartBody.Part images,
             @Part("client_id") String client_id,
