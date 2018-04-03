@@ -160,10 +160,12 @@ public class MySettingsActivity extends AppCompatActivity {
         final String customers_username =  username.getText().toString().trim();
         final String customers_telephone =  phone.getText().toString().trim();
         String customers_password =  password.getText().toString().trim();
-        if(customers_password !=null){
-            customers_password =  password.getText().toString().trim();
+        if(customers_password.isEmpty()){
+            customers_password = "";
+            Log.e("password","null");
         }else {
-            customers_password = null;
+            customers_password =  password.getText().toString().trim();
+            Log.e("password","customers_password");
         }
 
         //final ProgressDialog loading = ProgressDialog.show(this,"جاري تحميل البيانات","من فضلك انتظر",false,false);
@@ -190,6 +192,7 @@ public class MySettingsActivity extends AppCompatActivity {
             images = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
             Log.d("images", String.valueOf(images));
         }
+                     Log.d("customers_password", String.valueOf(customers_password));
 
         Log.d("DATA",customers_username+ customers_telephone+ customers_password+customers_id+ images);
         Call<UpdateUnformation> call = APIRequests.updateInformation(customers_username, customers_telephone, customers_password,customers_id,images);
@@ -197,19 +200,13 @@ public class MySettingsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<UpdateUnformation> call, retrofit2.Response<UpdateUnformation> response) {
                 dialog.dismiss();
-//                User userDetails = response.body().getData().get(0);
-//                String avatar = userDetails.getDriverPhoto();
-//                Log.d("avatar", avatar);
-
                 SessionManager sessionManager = new SessionManager(MySettingsActivity.this);
                 String name = customers_username;
                 String email = "admin@ghaith.com";
                 int user_id = customers_id;
-
                 String mobile = customers_telephone;
                 username.setText(name);
                 phone.setText(mobile);
-
                 HashMap<String, String> user = sessionManager.getUserDetails();
                 String type = user.get(SessionManager.TYPE);
                 String avatar = user.get(SessionManager.AVATAR);

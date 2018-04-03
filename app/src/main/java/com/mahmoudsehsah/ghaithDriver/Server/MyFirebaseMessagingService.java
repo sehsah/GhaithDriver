@@ -17,10 +17,12 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.mahmoudsehsah.ghaithDriver.R;
 import com.mahmoudsehsah.ghaithDriver.acitivities.ChatActivity;
+import com.mahmoudsehsah.ghaithDriver.acitivities.HomeActivity;
 import com.mahmoudsehsah.ghaithDriver.acitivities.MessageActivity;
 import com.mahmoudsehsah.ghaithDriver.acitivities.NotifcationActivity;
 import com.mahmoudsehsah.ghaithDriver.acitivities.OrdersActivity;
 import com.mahmoudsehsah.ghaithDriver.models.ChatList;
+import com.mahmoudsehsah.ghaithDriver.models.NewTripe;
 import com.mahmoudsehsah.ghaithDriver.session.SessionManager;
 
 import java.util.HashMap;
@@ -48,12 +50,63 @@ public class  MyFirebaseMessagingService extends FirebaseMessagingService {
             int typeNoti = Integer.parseInt(remoteMessage.getData().get("typeNoti"));
 
             if (typeNoti == 1) {
+
                 sendNotification(remoteMessage.getData());
+
+            }else if(typeNoti == 3){
+                Log.e("trip id_user ", remoteMessage.getData().get("id_user"));
+                Log.e("trip lat ", remoteMessage.getData().get("lat"));
+                Log.e("trip lng ", remoteMessage.getData().get("lng"));
+                Log.e("trip pickup_location ", remoteMessage.getData().get("pickup_location"));
+                Log.e("trip drop_location ", remoteMessage.getData().get("drop_location"));
+                Log.e("trip price ", remoteMessage.getData().get("price"));
+                Log.e("trip lat_user ", remoteMessage.getData().get("lat_user"));
+                Log.e("trip lng_user ", remoteMessage.getData().get("lng_user"));
+
+                String id_user = remoteMessage.getData().get("id_user");
+                String places = remoteMessage.getData().get("places");
+                String time = remoteMessage.getData().get("time");
+                double lat = Double.parseDouble(remoteMessage.getData().get("lat"));
+                double lng = Double.parseDouble(remoteMessage.getData().get("lng"));
+                String pickup_location = remoteMessage.getData().get("pickup_location");
+                String drop_location = remoteMessage.getData().get("drop_location");
+                String price = remoteMessage.getData().get("price");
+                double lat_user = Double.parseDouble(remoteMessage.getData().get("lat_user"));
+                double lng_user = Double.parseDouble(remoteMessage.getData().get("lng_user"));
+
+                NewTripe tripe = new NewTripe();
+                tripe.setPickup_location(pickup_location);
+                tripe.setId_user(String.valueOf(id_user));
+                tripe.setLat_user(Double.parseDouble(String.valueOf(lat_user)));
+                tripe.setLng_user(Double.parseDouble(String.valueOf(lng_user)));
+                tripe.setDrop_location(drop_location);
+                tripe.setPlaces(String.valueOf(places));
+                tripe.setLng(Double.parseDouble(String.valueOf(lng)));
+                tripe.setLat(Double.parseDouble(String.valueOf(lat)));
+                tripe.setPrice(String.valueOf(price));
+                tripe.setCreatedAt(time);
+
+
+                if (isAppIsInBackground(this)) {
+                    // app is in background show notification to user
+                    sendNotificationNewTrip(tripe);
+                    Log.e("background","true");
+                } else {
+                    // app is forground and user see it now send broadcast to update chat
+                    // you can send broadcast to do anything if you want !
+                    Intent intent = new Intent("UpdateChatActivity");
+//                    intent.putExtra("message", message);
+//                    intent.putExtra("driver_id", driver_id);
+//                    intent.putExtra("id_order",id_order);
+                    sendBroadcast(intent);
+                    Log.e("recevied", "true");
+                }
 
             } else {
 
-
                 Log.e("message content ", remoteMessage.getData().get("message"));
+                Log.e("message id_order ", remoteMessage.getData().get("id_order"));
+                Log.e("message client_id ", remoteMessage.getData().get("client_id"));
 
                 String messageContent = remoteMessage.getData().get("message");
                 int userId = Integer.parseInt(remoteMessage.getData().get("client_id"));
@@ -83,12 +136,13 @@ public class  MyFirebaseMessagingService extends FirebaseMessagingService {
                 if (isAppIsInBackground(this)) {
                     // app is in background show notification to user
                     sendNotificationMessage(message);
-                    Log.e("recevied ", " InBackground");
                 } else {
                     // app is forground and user see it now send broadcast to update chat
                     // you can send broadcast to do anything if you want !
                     Intent intent = new Intent("UpdateChatActivity");
                     intent.putExtra("message", message);
+                    intent.putExtra("driver_id", driver_id);
+                    intent.putExtra("id_order",id_order);
                     sendBroadcast(intent);
                     Log.e("recevied", "true");
 
@@ -98,18 +152,43 @@ public class  MyFirebaseMessagingService extends FirebaseMessagingService {
         }
     }
 
-    private  void sendNotificationMessage(ChatList message)
-    {
-        Intent intent = new Intent(this, MessageActivity.class);
-        intent.putExtra("message", String.valueOf(message));
+    private  void  sendNotificationNewTrip(NewTripe tripe){
+        Intent intent = new Intent(this, HomeActivity.class);
+
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle("رساله من المندوب")
+                .setContentTitle("رحله جديدة في انتظارك")
+                .setContentText("")
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(0, notificationBuilder.build());
+    }
+
+    private  void sendNotificationMessage(ChatList message)
+    {
+        Intent intent = new Intent(this, MessageActivity.class);
+        intent.putExtra("message", message.getMessage());
+        intent.putExtra("client_id", message.getClientId());
+        intent.putExtra("id_order",message.getid_order());
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("رساله من العميل")
                 .setContentText(message.getMessage())
                 .setAutoCancel(true)
                 .setSound(defaultSoundUri)

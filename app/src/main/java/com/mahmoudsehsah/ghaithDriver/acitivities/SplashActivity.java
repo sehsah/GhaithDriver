@@ -14,6 +14,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -32,15 +33,22 @@ import java.util.Locale;
  */
 
 public class SplashActivity extends ActivityManagePermission {
-    String permissionAsk[] = {PermissionUtils.Manifest_CAMERA, PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE, PermissionUtils.Manifest_READ_EXTERNAL_STORAGE, PermissionUtils.Manifest_ACCESS_FINE_LOCATION, PermissionUtils.Manifest_ACCESS_COARSE_LOCATION};
-
+    String permissionAsk[] = {
+            PermissionUtils.Manifest_CAMERA,
+            PermissionUtils.Manifest_WRITE_EXTERNAL_STORAGE,
+            PermissionUtils.Manifest_READ_EXTERNAL_STORAGE,
+            PermissionUtils.Manifest_ACCESS_FINE_LOCATION,
+            PermissionUtils.Manifest_ACCESS_COARSE_LOCATION
+    };
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.splash_activity);
         int SPLASH_TIME_OUT = 1000;
+
         changement();
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
@@ -50,17 +58,8 @@ public class SplashActivity extends ActivityManagePermission {
         }
 
         new Handler().postDelayed(new Runnable() {
-
-            /*
-             * Showing splash screen with a timer. This will be useful when you
-             * want to show case your app logo / company
-             */
-
             @Override
             public void run() {
-                // This method will be executed once the timer is over
-                // Start your app main activity
-
                 askCompactPermissions(permissionAsk, new PermissionResult() {
                     @Override
                     public void permissionGranted() {
@@ -77,9 +76,10 @@ public class SplashActivity extends ActivityManagePermission {
                         changement();
                     }
                 });
-
             }
         }, SPLASH_TIME_OUT);
+
+
     }
     public void changement() {
         SessionManager sessionManager = new SessionManager(getApplicationContext());
@@ -97,15 +97,34 @@ public class SplashActivity extends ActivityManagePermission {
         finish();
         isGooglePlayServicesAvailable(SplashActivity.this);
 
-        if (ActivityCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(SplashActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(SplashActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-            return;
-        }else{
-            // Write you code here if permission already given.
-        }
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case 1: {
+
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(SplashActivity.this, "غير قادر علس السماح بالصلاحيات", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
 
     public boolean isGooglePlayServicesAvailable(Context context) {
         GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();

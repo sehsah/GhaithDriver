@@ -1,5 +1,6 @@
 package com.mahmoudsehsah.ghaithDriver.acitivities;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -88,6 +89,7 @@ public class MessageActivity extends AppCompatActivity {
     private Toolbar mTopToolbar;
     TextView driver_name_text,drivername,pricc;
     ImageView driver_photo;
+    private String client_id;
 
 //    private ArrayList<ChatList> data;
 //    private DataAdapterGetMessage adapter;
@@ -124,6 +126,7 @@ public class MessageActivity extends AppCompatActivity {
         }
     };
 
+    @SuppressLint("LongLogTag")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,6 +137,7 @@ public class MessageActivity extends AppCompatActivity {
         scrollView = (ScrollView)findViewById(R.id.scrollView);
         driver_name_text = findViewById(R.id.driver_name);
         driver_photo = findViewById(R.id.driver_photo);
+
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         // change font
@@ -143,8 +147,8 @@ public class MessageActivity extends AppCompatActivity {
 
         String driver_name = getIntent().getStringExtra("client_name");
         String price = getIntent().getStringExtra("price");
-          drivername = findViewById(R.id.drivername);
-          pricc = findViewById(R.id.price);
+        drivername = findViewById(R.id.drivername);
+        pricc = findViewById(R.id.price);
         drivername.setText(driver_name);
 
 
@@ -160,8 +164,31 @@ public class MessageActivity extends AppCompatActivity {
         stars.getDrawable(0).setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
         stars.getDrawable(1).setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
 
+
+        if (getIntent().getExtras() != null) {
+            for (String key : getIntent().getExtras().keySet()) {
+                String value = getIntent().getExtras().getString(key);
+                Log.e("MY DATA", "Key: " + key + " Value: " + value);
+            }
+        }
+        client_id = getIntent().getExtras().getString("client_id");
+        if (client_id != null){
+            Log.e("client id from notifcation ",client_id);
+        }
+        Intent intent_o = getIntent();
+        String client_id = intent_o.getStringExtra("client_id");
+        String id_order = intent_o.getStringExtra("id_order");
+
+        if (client_id != null){
+            Log.e("client id from noti ",client_id);
+        }
+        if (id_order != null){
+            Log.e(" id_order from noti ",id_order);
+        }
+
+
         final String id = getIntent().getStringExtra("client_id");
-        Log.e("client id",id);
+//        Log.e("client id",id);
         String url = "http://yaqeensa.com/android/ghaith/GetClientInformation?id="+id;
         Log.d("url",url);
         RequestQueue requestQueue= Volley.newRequestQueue(MessageActivity.this);
@@ -174,6 +201,9 @@ public class MessageActivity extends AppCompatActivity {
                     for(int i=0;i<jsonArray.length();i++){
                         JSONObject jsonObject1=jsonArray.getJSONObject(i);
                         final String driver_telephone =jsonObject1.getString("customers_telephone");
+                        final String driver_name =jsonObject1.getString("customers_username");
+                        drivername.setText(driver_name);
+
                         ImageView call = findViewById(R.id.call);
                         call.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -199,8 +229,7 @@ public class MessageActivity extends AppCompatActivity {
         requestQueue.add(stringRequest);
 
 
-        String id_order = getIntent().getStringExtra("id_order");
-//        Log.d("id_order",id_order);
+
         String url2 = "http://yaqeensa.com/android/ghaith/ShowOrderInfo?id="+id_order;
         RequestQueue requestQueue2= Volley.newRequestQueue(getApplicationContext());
         StringRequest stringRequest2=new StringRequest(Request.Method.GET, url2, new com.android.volley.Response.Listener<String>() {
@@ -222,7 +251,7 @@ public class MessageActivity extends AppCompatActivity {
                             TextView text_finish = findViewById(R.id.text_finish);
                             text_finish.setVisibility(View.VISIBLE);
                         }
-                        final String name_delivery =jsonObject1.getString("name_delivery");
+//                        final String name_delivery =jsonObject1.getString("name_delivery");
                         Log.e("price", "Done");
 
 
@@ -252,7 +281,7 @@ public class MessageActivity extends AppCompatActivity {
                 SessionManager sessionManager = new SessionManager(MessageActivity.this);
                 HashMap<String, String> user = sessionManager.getUserDetails();
                 String driver_id  = user.get(SessionManager.USER_ID);
-                 String client_id = getIntent().getStringExtra("client_id");
+                String client_id = getIntent().getStringExtra("client_id");
 
 
                 if (messageArea.getText().toString().isEmpty()) return;
@@ -566,9 +595,8 @@ public class MessageActivity extends AppCompatActivity {
         String uid = user.get(SessionManager.USER_ID);
         String client_id = getIntent().getStringExtra("client_id");
         String id_order = getIntent().getStringExtra("id_order");
-        Log.d("id_order",id_order);
-        Log.d("client_id",client_id);
-        Log.d("id_driver",uid);
+
+
 
         WebService.getInstance().getApi().getMessages(client_id,uid,id_order).enqueue(new Callback<List<ChatList>>() {
             @Override
