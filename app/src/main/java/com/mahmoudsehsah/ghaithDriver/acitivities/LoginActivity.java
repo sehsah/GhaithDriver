@@ -190,6 +190,7 @@ public class LoginActivity extends ActivityManagePermission {
                     int active = Integer.parseInt(userDetails.getActive());
                     Log.d("Login type",type);
                     Log.d("user_id",user_id);
+                    Log.d("type",type);
                     Log.d("active", String.valueOf(active));
                     if(active == 0){
                         startActivity(new Intent(LoginActivity.this, RegisterAlertActivity.class));

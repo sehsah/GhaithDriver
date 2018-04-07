@@ -62,6 +62,7 @@ public class  MyFirebaseMessagingService extends FirebaseMessagingService {
                 Log.e("trip price ", remoteMessage.getData().get("price"));
                 Log.e("trip lat_user ", remoteMessage.getData().get("lat_user"));
                 Log.e("trip lng_user ", remoteMessage.getData().get("lng_user"));
+                Log.e("id  ", remoteMessage.getData().get("id"));
 
                 String id_user = remoteMessage.getData().get("id_user");
                 String places = remoteMessage.getData().get("places");
@@ -73,6 +74,7 @@ public class  MyFirebaseMessagingService extends FirebaseMessagingService {
                 String price = remoteMessage.getData().get("price");
                 double lat_user = Double.parseDouble(remoteMessage.getData().get("lat_user"));
                 double lng_user = Double.parseDouble(remoteMessage.getData().get("lng_user"));
+                int id = Integer.parseInt(remoteMessage.getData().get("id"));
 
                 NewTripe tripe = new NewTripe();
                 tripe.setPickup_location(pickup_location);
@@ -84,20 +86,22 @@ public class  MyFirebaseMessagingService extends FirebaseMessagingService {
                 tripe.setLng(Double.parseDouble(String.valueOf(lng)));
                 tripe.setLat(Double.parseDouble(String.valueOf(lat)));
                 tripe.setPrice(String.valueOf(price));
+                tripe.setId(String.valueOf(id));
                 tripe.setCreatedAt(time);
 
+                ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+                List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+                Log.d("TEST", "CURRENT Activity ::" + taskInfo.get(0).topActivity.getClassName());
 
-                if (isAppIsInBackground(this)) {
+                if (isAppIsInBackground(this) &&  !taskInfo.get(0).topActivity.getClassName().equals(HomeActivity.class.getName())) {
                     // app is in background show notification to user
                     sendNotificationNewTrip(tripe);
                     Log.e("background","true");
                 } else {
                     // app is forground and user see it now send broadcast to update chat
                     // you can send broadcast to do anything if you want !
-                    Intent intent = new Intent("UpdateChatActivity");
-//                    intent.putExtra("message", message);
-//                    intent.putExtra("driver_id", driver_id);
-//                    intent.putExtra("id_order",id_order);
+                    Intent intent = new Intent("ShowTripActivity");
+                    intent.putExtra("tripe", tripe);
                     sendBroadcast(intent);
                     Log.e("recevied", "true");
                 }
@@ -129,6 +133,11 @@ public class  MyFirebaseMessagingService extends FirebaseMessagingService {
                 SessionManager sessionManager = new SessionManager(MyFirebaseMessagingService.this);
                 HashMap<String, String> user = sessionManager.getUserDetails();
                 int uid = Integer.parseInt(user.get(SessionManager.USER_ID));
+
+//                ActivityManager am = (ActivityManager) this.getSystemService(ACTIVITY_SERVICE);
+//                List<ActivityManager.RunningTaskInfo> taskInfo = am.getRunningTasks(1);
+//                Log.d("TEST", "CURRENT Activity ::" + taskInfo.get(0).topActivity.getClassName());
+
 
                 // check if the sender of message is current user or not
                 //if (!(userId == uid)) {

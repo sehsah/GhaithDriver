@@ -1,15 +1,20 @@
 package com.mahmoudsehsah.ghaithDriver.adapter;
 
+import com.mahmoudsehsah.ghaithDriver.models.AcceptTrips;
 import com.mahmoudsehsah.ghaithDriver.models.AddNewOffer;
 import com.mahmoudsehsah.ghaithDriver.models.ChatList;
 import com.mahmoudsehsah.ghaithDriver.models.FinishOrder;
 import com.mahmoudsehsah.ghaithDriver.models.FinishRegister;
+import com.mahmoudsehsah.ghaithDriver.models.FinishTrip;
 import com.mahmoudsehsah.ghaithDriver.models.Login;
+import com.mahmoudsehsah.ghaithDriver.models.NewTripe;
 import com.mahmoudsehsah.ghaithDriver.models.Register;
 import com.mahmoudsehsah.ghaithDriver.models.RegisterNewMarket;
+import com.mahmoudsehsah.ghaithDriver.models.RejectTrips;
 import com.mahmoudsehsah.ghaithDriver.models.SendMessage;
 import com.mahmoudsehsah.ghaithDriver.models.SendNotiFirbaseClient;
 import com.mahmoudsehsah.ghaithDriver.models.UpdateBill;
+import com.mahmoudsehsah.ghaithDriver.models.UpdateSatus;
 import com.mahmoudsehsah.ghaithDriver.models.UpdateToken;
 import com.mahmoudsehsah.ghaithDriver.models.UpdateUnformation;
 import com.mahmoudsehsah.ghaithDriver.models.updateLocation;
@@ -19,12 +24,14 @@ import java.util.List;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -84,9 +91,40 @@ public interface APIRequests {
     Call<UpdateToken> UpdateToken(
             @Field("id_user") String id_user,
             @Field("token") String token);
+
+    @FormUrlEncoded
+    @POST("android/ghaith/UpdateStatus")
+    Call<UpdateSatus> UpdateSatus(
+            @Field("id_driver") String id_driver,
+            @Field("online") String online);
+
+
+
     ////////////////////////////////// Trips   //////////////////////////////////
-    @GET("android/ghaith/getNewTrip")
-    Call<JSONResponseGetNewTrip> getJSONGetTrip();
+
+
+    @FormUrlEncoded
+    @POST("android/ghaith/finishTrip")
+    Call<FinishTrip> FinishTrip(
+            @Field("id_user") String id_user,
+            @Field("id_trip") String id_trip,
+            @Field("id_driver") String id_driver
+    );
+
+    @FormUrlEncoded
+    @POST("android/ghaith/AcceptTrips")
+    Call<AcceptTrips> AcceptTrips(
+            @Field("id_user") String id_user,
+            @Field("id_trip") String id_trip,
+            @Field("id_driver") String id_driver
+    );
+
+    @FormUrlEncoded
+    @POST("android/ghaith/RejectTrips")
+    Call<RejectTrips> RejectTrips(
+            @Field("id_order") String id_order,
+            @Field("id_driver") String id_driver
+    );
 
     ///////////////////////////////// Orders ////////////////////////////////////
 

@@ -88,9 +88,16 @@ public class SplashActivity extends ActivityManagePermission {
             sessionManager = new SessionManager(SplashActivity.this);
             HashMap<String, String> user = sessionManager.getUserDetails();
             String type = user.get(SessionManager.TYPE);
+            String username = user.get(SessionManager.KEY_NAME);
+            Log.e("username",username);
+            Log.e("type",type);
 
-           startActivity(new Intent(SplashActivity.this, ShowMarketActivity.class));
-        } else {
+            if(type.equals("driver")){
+                startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+            }else {
+                startActivity(new Intent(SplashActivity.this, ShowMarketActivity.class));
+
+            }        } else {
             Intent i = new Intent(SplashActivity.this, MainActivity.class);
             startActivity(i);
         }

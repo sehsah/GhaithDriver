@@ -9,7 +9,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by mahmoud on 4/4/2018.
  */
 
-public class NewTripe {
+public class NewTripe implements Parcelable {
 
     public static final Parcelable.Creator<NewTripe> CREATOR = new Parcelable.Creator<NewTripe>() {
         @Override
@@ -23,6 +23,9 @@ public class NewTripe {
         }
     };
 
+
+    @SerializedName("id")
+    private String id;
 
     @SerializedName("id_user")
     private String id_user;
@@ -71,6 +74,7 @@ public class NewTripe {
     }
 
     protected NewTripe(Parcel in) {
+        id = in.readString();
         id_user = in.readString();
         lat_user = Double.parseDouble(in.readString());
         lng_user = Double.parseDouble(in.readString());
@@ -82,6 +86,14 @@ public class NewTripe {
         time = in.readString();
         status = in.readString();
         createdAt = in.readString();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
 
@@ -171,5 +183,22 @@ public class NewTripe {
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(id_user);
+        dest.writeString(String.valueOf(lat_user));
+        dest.writeString(String.valueOf(lng_user));
+        dest.writeString(String.valueOf(lat));
+        dest.writeString(String.valueOf(lng));
+        dest.writeString(String.valueOf(price));
+        dest.writeString(String.valueOf(pickup_location));
+        dest.writeString(String.valueOf(drop_location));
+        dest.writeString(createdAt);
+    }
 }

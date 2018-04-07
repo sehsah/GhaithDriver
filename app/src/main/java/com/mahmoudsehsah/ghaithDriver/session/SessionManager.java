@@ -192,6 +192,7 @@ public class SessionManager {
         user.put(KEY_EMAIL, pref.getString(KEY_EMAIL, null));
         user.put(USER_ID, pref.getString(USER_ID, null));
         user.put(AVATAR, pref.getString(AVATAR, null));
+        user.put(TYPE, pref.getString(TYPE, null));
 
         // return user
         return user;
