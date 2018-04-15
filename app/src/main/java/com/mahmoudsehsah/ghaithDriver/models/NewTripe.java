@@ -79,11 +79,13 @@ public class NewTripe implements Parcelable {
         lat_user = Double.parseDouble(in.readString());
         lng_user = Double.parseDouble(in.readString());
         places = in.readString();
+        time = in.readString();
+        lat = Double.parseDouble(in.readString());
         lng = Double.parseDouble(in.readString());
         name = in.readString();
         pickup_location = in.readString();
         drop_location = in.readString();
-        time = in.readString();
+        price = in.readString();
         status = in.readString();
         createdAt = in.readString();
     }
@@ -194,11 +196,15 @@ public class NewTripe implements Parcelable {
         dest.writeString(id_user);
         dest.writeString(String.valueOf(lat_user));
         dest.writeString(String.valueOf(lng_user));
+        dest.writeString(String.valueOf(places));
+        dest.writeString(String.valueOf(time));
         dest.writeString(String.valueOf(lat));
         dest.writeString(String.valueOf(lng));
-        dest.writeString(String.valueOf(price));
+        dest.writeString(String.valueOf(name));
         dest.writeString(String.valueOf(pickup_location));
         dest.writeString(String.valueOf(drop_location));
+        dest.writeString(String.valueOf(price));
+        dest.writeString(String.valueOf(status));
         dest.writeString(createdAt);
     }
 }

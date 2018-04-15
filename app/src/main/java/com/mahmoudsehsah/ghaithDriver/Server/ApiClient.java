@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class ApiClient {
-    public static final String URL      = "http://yaqeensa.com/";
+    public static final String URL      = "http://ghaithksa.com/admin/";
     public static Retrofit RETROFIT     = null;
 
     public static Retrofit getClient(){

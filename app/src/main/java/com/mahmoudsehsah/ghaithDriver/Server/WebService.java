@@ -13,7 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class WebService {
     private static WebService instance;
     private APIRequests api;
-    public static final String URL      = "http://yaqeensa.com/";
+    public static final String URL      = "http://ghaithksa.com/";
 
     public WebService() {
 

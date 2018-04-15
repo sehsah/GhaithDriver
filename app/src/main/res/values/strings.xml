@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">Gaith DRiver</string>
-    <string name="site">http://www.yaqeensa.com</string>
+    <string name="site">http://www.ghaithksa.com</string>
 
     <!--Do not change this for localization -->
     <string name="google_android_map_api_key">AIzaSyBziwEm_JosLNKB-EULxXO7uGp2vTtasy4</string>
@@ -111,7 +111,7 @@
     <string name="ride_request">Ride Request</string>
     <string name="vehicle_name">"Vehicle Name       "</string>
     <string name="unpaid">Unpaid</string>
-    <string name="cityUrl">http://www.yaqeensa.com/android/ghaith/getCity</string>
+    <string name="cityUrl">http://www.ghaithksa.com/admin/getCity</string>
 
     <string-array name="payment_mode">
         <item>Cash on hand [to driver]</item>

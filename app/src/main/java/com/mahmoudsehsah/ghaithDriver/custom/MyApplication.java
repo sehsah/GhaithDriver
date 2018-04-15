@@ -1,19 +1,8 @@
 package com.mahmoudsehsah.ghaithDriver.custom;
 
 import android.support.multidex.MultiDexApplication;
-import android.util.Log;
 
-import com.mahmoudsehsah.ghaithDriver.R;
-import com.mahmoudsehsah.ghaithDriver.Server.ApiClient;
-import com.mahmoudsehsah.ghaithDriver.adapter.APIRequests;
-import com.mahmoudsehsah.ghaithDriver.models.updateUserId;
-import com.mahmoudsehsah.ghaithDriver.session.SessionManager;
-import com.onesignal.OneSignal;
-
-import java.util.HashMap;
-
-import retrofit2.Call;
-import retrofit2.Callback;
+import com.mahmoudsehsah.ghaithDriver.Server.ConnectionReceiver;
 
 
 /**
@@ -21,13 +10,22 @@ import retrofit2.Callback;
  */
 
 public class MyApplication extends MultiDexApplication {
+    private static MyApplication mInstance;
+
     @Override
     public void onCreate() {
 
         super.onCreate();
+        mInstance = this;
 
 
     }
 
+    public static synchronized MyApplication getInstance() {
+        return mInstance;
+    }
 
+    public void setConnectionListener(ConnectionReceiver.ConnectionReceiverListener listener) {
+        ConnectionReceiver.connectionReceiverListener = listener;
+    }
 }

@@ -16,12 +16,11 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.mahmoudsehsah.ghaithDriver.R;
-import com.mahmoudsehsah.ghaithDriver.acitivities.ChatActivity;
 import com.mahmoudsehsah.ghaithDriver.acitivities.HomeActivity;
 import com.mahmoudsehsah.ghaithDriver.acitivities.MessageActivity;
 import com.mahmoudsehsah.ghaithDriver.acitivities.NotifcationActivity;
-import com.mahmoudsehsah.ghaithDriver.acitivities.OrdersActivity;
 import com.mahmoudsehsah.ghaithDriver.models.ChatList;
+import com.mahmoudsehsah.ghaithDriver.models.FinishTrip;
 import com.mahmoudsehsah.ghaithDriver.models.NewTripe;
 import com.mahmoudsehsah.ghaithDriver.session.SessionManager;
 
@@ -52,14 +51,39 @@ public class  MyFirebaseMessagingService extends FirebaseMessagingService {
             if (typeNoti == 1) {
 
                 sendNotification(remoteMessage.getData());
+            }else if(typeNoti == 5){
+                Intent intent = new Intent("CancelTrip");
+                sendBroadcast(intent);
 
+            }else if(typeNoti == 4){
+                String id_user = remoteMessage.getData().get("id_user");
+                String id_trip = remoteMessage.getData().get("id_trip");
+                String price = remoteMessage.getData().get("price");
+                int id_driver = Integer.parseInt(remoteMessage.getData().get("lat"));
+                FinishTrip finish_trip = new FinishTrip();
+                finish_trip.setId_user(id_user);
+                finish_trip.setId_driver(String.valueOf(id_driver));
+                finish_trip.setId_trip(id_trip);
+                finish_trip.setPrice(price);
+                if (isAppIsInBackground(this)) {
+                    // app is in background show notification to user
+                    sendNotificationFinishTrip(finish_trip);
+                    Log.e("background","true");
+                } else {
+                    // app is forground and user see it now send broadcast to update chat
+                    // you can send broadcast to do anything if you want !
+                    Intent intent = new Intent("ShowBillActivity");
+                    intent.putExtra("bill", finish_trip);
+                    sendBroadcast(intent);
+                    Log.e("recevied", "true");
+                }
             }else if(typeNoti == 3){
                 Log.e("trip id_user ", remoteMessage.getData().get("id_user"));
                 Log.e("trip lat ", remoteMessage.getData().get("lat"));
                 Log.e("trip lng ", remoteMessage.getData().get("lng"));
                 Log.e("trip pickup_location ", remoteMessage.getData().get("pickup_location"));
                 Log.e("trip drop_location ", remoteMessage.getData().get("drop_location"));
-                Log.e("trip price ", remoteMessage.getData().get("price"));
+                Log.e("trip pricee ", remoteMessage.getData().get("price"));
                 Log.e("trip lat_user ", remoteMessage.getData().get("lat_user"));
                 Log.e("trip lng_user ", remoteMessage.getData().get("lng_user"));
                 Log.e("id  ", remoteMessage.getData().get("id"));
@@ -159,6 +183,28 @@ public class  MyFirebaseMessagingService extends FirebaseMessagingService {
             }
             //}
         }
+    }
+
+    private  void  sendNotificationFinishTrip(FinishTrip finishTrip){
+        Intent intent = new Intent(this, HomeActivity.class);
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle("تم انتهاء رحلتك")
+                .setContentText("")
+                .setAutoCancel(true)
+                .setSound(defaultSoundUri)
+                .setContentIntent(pendingIntent);
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        notificationManager.notify(0, notificationBuilder.build());
     }
 
     private  void  sendNotificationNewTrip(NewTripe tripe){

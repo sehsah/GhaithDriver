@@ -2,6 +2,7 @@ package com.mahmoudsehsah.ghaithDriver.adapter;
 
 import com.mahmoudsehsah.ghaithDriver.models.AcceptTrips;
 import com.mahmoudsehsah.ghaithDriver.models.AddNewOffer;
+import com.mahmoudsehsah.ghaithDriver.models.CancelTrip;
 import com.mahmoudsehsah.ghaithDriver.models.ChatList;
 import com.mahmoudsehsah.ghaithDriver.models.FinishOrder;
 import com.mahmoudsehsah.ghaithDriver.models.FinishRegister;
@@ -42,7 +43,7 @@ public interface APIRequests {
 
     ////////////////////////////////// Auth  //////////////////////////////////
     @Multipart
-    @POST("android/ghaith/processRegistrationDriver")
+    @POST("processRegistrationDriver")
     Call<Register> register(
             @Part("type") String type,
             @Part("driver_telephone") String driver_telephone,
@@ -50,7 +51,7 @@ public interface APIRequests {
             @Part("driver_username") String driver_username);
 
     @Multipart
-    @POST("android/ghaith/FinishRegister")
+    @POST("FinishRegister")
     Call<FinishRegister> FinishRegister(
             @Part("driver_id") String driver_id,
             @Part MultipartBody.Part file,
@@ -59,13 +60,13 @@ public interface APIRequests {
             @Part MultipartBody.Part fil4);
 
     @FormUrlEncoded
-    @POST("android/ghaith/processLoginDriver")
+    @POST("processLoginDriver")
     Call<Login> login(
             @Field("driver_telephone") String driver_telephone,
             @Field("driver_password") String driver_password);
 
     @Multipart
-    @POST("android/ghaith/update_informationDriver")
+    @POST("update_informationDriver")
     Call<UpdateUnformation> updateInformation(
             @Part("driver_username") String driver_username,
             @Part("driver_telephone") String driver_telephone,
@@ -74,26 +75,26 @@ public interface APIRequests {
             @Part MultipartBody.Part customers_photo);
 
     @FormUrlEncoded
-    @POST("android/ghaith/update_locationDriver")
+    @POST("update_locationDriver")
     Call<updateLocation> updateLocation(
             @Field("driver_id") String driver_id,
             @Field("lat") double lat,
             @Field("lng") double lng);
 
     @FormUrlEncoded
-    @POST("android/ghaith/updateUserId2")
+    @POST("updateUserId2")
     Call<updateUserId> updateUserId(
             @Field("id_user") String id_user,
             @Field("userId") String userId);
 
     @FormUrlEncoded
-    @POST("android/ghaith/UpdateTokenDriver")
+    @POST("UpdateTokenDriver")
     Call<UpdateToken> UpdateToken(
             @Field("id_user") String id_user,
             @Field("token") String token);
 
     @FormUrlEncoded
-    @POST("android/ghaith/UpdateStatus")
+    @POST("UpdateStatus")
     Call<UpdateSatus> UpdateSatus(
             @Field("id_driver") String id_driver,
             @Field("online") String online);
@@ -104,15 +105,16 @@ public interface APIRequests {
 
 
     @FormUrlEncoded
-    @POST("android/ghaith/finishTrip")
+    @POST("finishTrip")
     Call<FinishTrip> FinishTrip(
             @Field("id_user") String id_user,
             @Field("id_trip") String id_trip,
+            @Field("price") String price,
             @Field("id_driver") String id_driver
     );
 
     @FormUrlEncoded
-    @POST("android/ghaith/AcceptTrips")
+    @POST("AcceptTrips")
     Call<AcceptTrips> AcceptTrips(
             @Field("id_user") String id_user,
             @Field("id_trip") String id_trip,
@@ -120,7 +122,7 @@ public interface APIRequests {
     );
 
     @FormUrlEncoded
-    @POST("android/ghaith/RejectTrips")
+    @POST("RejectTrips")
     Call<RejectTrips> RejectTrips(
             @Field("id_order") String id_order,
             @Field("id_driver") String id_driver
@@ -128,14 +130,14 @@ public interface APIRequests {
 
     ///////////////////////////////// Orders ////////////////////////////////////
 
-    @GET("android/ghaith/getOrders")
+    @GET("getOrders")
     Call<JSONResponseGetOrders> getJSONGetOrder(@Query("id_market") String id_market);
 
-    @GET("android/ghaith/getmyOrders")
+    @GET("getmyOrders")
     Call<JSONResponseGetMyOrders> JSONResponseGetMyOrders(@Query("id_user") String id_user);
 
     @FormUrlEncoded
-    @POST("android/ghaith/AddNewOffer")
+    @POST("AddNewOffer")
     Call<AddNewOffer> AddNewOffer(
             @Field("id_user") String id_user,
             @Field("id_driver") String id_driver,
@@ -149,20 +151,20 @@ public interface APIRequests {
             @Field("id_order") String id_order
     );
 
-    @GET("android/ghaith/getnotifcation")
+    @GET("getnotifcation")
     Call<JSONResponseGetNotfcation> getJSONNotfcation(@Query("id") String id);
 
-    @GET("android/ghaith/ChatListDriver")
+    @GET("ChatListDriver")
     Call<JSONResponseGetChatListUsrer> getJSONChatListUsrer(@Query("id_user") String id_user);
 
-    @GET("android/ghaith/Masseges")
+    @GET("Masseges")
     Call<JSONResponseGetMasseges> getJSONMasseges(@Query("id_user") String id_user, @Query("id_driver") String id_driver,@Query("id_order") String id_order);
 
-    @GET("android/ghaith/Masseges")
+    @GET("Masseges")
     Call<List<ChatList>> getMessages(@Query("id_user") String id_user, @Query("id_driver") String id_driver, @Query("id_order") String id_order);
 
     @FormUrlEncoded
-    @POST("android/ghaith/SendMessageToClient")
+    @POST("SendMessageToClient")
     Call<SendMessage> SendMessagee(
             @Field("message") String message,
             @Field("client_id") String client_id,
@@ -173,7 +175,7 @@ public interface APIRequests {
     );
 
     @Multipart
-    @POST("android/ghaith/SendMessagePhotoToClient")
+    @POST("SendMessagePhotoToClient")
     Call<SendMessage> SendMessagePhoto(
             @Part MultipartBody.Part images,
             @Part("client_id") String client_id,
@@ -184,7 +186,7 @@ public interface APIRequests {
     );
 
     @FormUrlEncoded
-    @POST("android/ghaith/UpdateBill")
+    @POST("UpdateBill")
     Call<UpdateBill> UpdateBill(
             @Field("price2") String price2,
             @Field("id_order") String id_order
@@ -193,7 +195,7 @@ public interface APIRequests {
     );
 
     @FormUrlEncoded
-    @POST("android/ghaith/SendNotiFirbaseClient")
+    @POST("SendNotiFirbaseClient")
     Call<SendNotiFirbaseClient> SendNotiFirbaseClient(
             @Field("id_client") String client_id,
             @Field("title") String title
@@ -201,14 +203,23 @@ public interface APIRequests {
 
 
     @FormUrlEncoded
-    @POST("android/ghaith/RegisterNewMarket")
+    @POST("RegisterNewMarket")
     Call<RegisterNewMarket> RegisterNewMarket(
             @Field("id_driver") String id_driver,
             @Field("id_market") String id_market
     );
 
-    @GET("android/ghaith/FinishOrder")
+    @GET("FinishOrder")
     Call<FinishOrder> FinishOrder(@Query("id_order") String id_order);
+
+
+    @FormUrlEncoded
+    @POST("DriverCancelTrips")
+    Call<CancelTrip> CancelTrip(
+            @Field("id_user") String id_user,
+            @Field("id_trip") String id_trip
+    );
+
 }
 
 

@@ -14,7 +14,7 @@ import com.loopj.android.http.SyncHttpClient;
 
 public class Server {
 
-    public static final String BASE_URL = "http://www.yaqeensa.com/";            // Your admin panel URL
+    public static final String BASE_URL = "http://www.ghaithksa.com/";            // Your admin panel URL
 
     private static final String TAG = "server";
     private static AsyncHttpClient client = new AsyncHttpClient();

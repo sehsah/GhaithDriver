@@ -5,33 +5,83 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:orientation="vertical">
+    android:orientation="horizontal">
 
 
-
-
-    <RelativeLayout
+    <LinearLayout
         android:background="#fff"
-        android:id="@+id/start_trip_box"
-        android:visibility="invisible"
+        android:id="@+id/arrive_to_client_box"
         android:padding="20dp"
+        android:visibility="invisible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom">
-
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/arrive_to_client"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_arrived"
+                android:padding="10dp"
+                android:layout_centerHorizontal="true"
+                android:text="تم الوصول للعميل "
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        </RelativeLayout>
         <Button
-            android:id="@+id/start_trip"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/btn_accepted"
-            android:padding="10dp"
-            android:layout_centerHorizontal="true"
-            android:text="بدا المهمه"
+            android:id="@+id/cancel_trip"
+            android:background="@drawable/btn_cancel"
             android:textColor="@color/white"
-            android:textStyle="bold" />
+            android:text="الغاء"/>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/direction"
+            android:id="@+id/directionToPlace"
+            />
+    </LinearLayout>
 
+    <LinearLayout
+        android:background="#fff"
+        android:id="@+id/start_trip_box"
+        android:padding="20dp"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
 
-    </RelativeLayout>
+        android:layout_gravity="bottom">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/start_trip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_accepted"
+                android:padding="10dp"
+                android:layout_centerHorizontal="true"
+                android:text="بدا المهمه"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        </RelativeLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/direction"
+            android:id="@+id/directionToClient"
+            />
+    </LinearLayout>
 
     <RelativeLayout
         android:background="#fff"
@@ -41,7 +91,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom">
-
         <Button
             android:id="@+id/end_trip"
             android:layout_width="match_parent"
@@ -52,12 +101,11 @@
             android:text="انهاء المهمه"
             android:textColor="@color/white"
             android:textStyle="bold" />
-
     </RelativeLayout>
 
 
 
-        <LinearLayout
+    <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/header2"
@@ -94,6 +142,11 @@
                 android:layout_height="wrap_content"
                 android:visibility="gone"
                 android:id="@+id/id"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:id="@+id/price"/>
             <LinearLayout
                 android:id="@+id/linear_pickup"
                 android:layout_width="match_parent"
@@ -278,7 +331,8 @@
                  <RelativeLayout
                      android:layout_width="wrap_content"
                      android:layout_marginLeft="20dp"
-                     android:layout_marginRight="20dp"                     android:layout_gravity="center_vertical"
+                     android:layout_marginRight="20dp"
+                     android:layout_gravity="center_vertical"
                      android:layout_weight="1"
                      android:layout_height="wrap_content">
                      <Button

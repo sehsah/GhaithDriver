@@ -19,25 +19,32 @@
                 class ="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/car_type"
                 />
         </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:id="@+id/mapOff"
+        android:background="#ccc"
         android:visibility="gone"
         android:layout_height="match_parent"
         android:orientation="horizontal">
 
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/direct"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical|center_horizontal|center"
-            android:gravity="center"
+            android:layout_gravity="bottom|center"
+            android:gravity="bottom|center"
+            android:layout_marginBottom="60dp"
             android:textSize="25dp"
+            android:textColor="#000"
             android:text="انت الان غير متاح"/>
     </LinearLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -66,10 +73,26 @@
     </RelativeLayout>
 
 
+
     <RelativeLayout
-        android:id="@+id/header"
+        android:id="@+id/box_client_info1"
         android:gravity="bottom"
         android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <include
+            android:id="@+id/box_client_info"
+            layout="@layout/client_info"
+            android:layout_marginBottom="80dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:visibility="gone"
+        android:gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
       >
